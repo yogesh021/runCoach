@@ -1,0 +1,596 @@
+<title>runcoach Backend Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Layout: a product-coloured hero band, then a reading column with a sticky contents rail; diagrams are inline SVG drawn from the same tokens. */
+  :root {
+    --bg: #F6F5F1; --surface: #FFFFFF; --fg: #16201C; --muted: #5B655F; --line: #E3E1DA; --line-soft: #F0EEE8;
+    --green: #1F6F5A; --green-ink: #174F41; --green-soft: #E6F2EE; --green-mid: #9CC7B8;
+    --ember: #C24E0F; --ember-soft: #FBEDE4; --slate: #3F4A7A; --slate-soft: #E8EAF4;
+    --ink: #16201C; --ink-fg: #FFFFFF; --ink-muted: #C9D6D0;
+    --display: 'Manrope', system-ui, sans-serif; --body: 'Manrope', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141917; --surface: #1C2320; --fg: #EEF1EC; --muted: #A3ADA7; --line: #2C3531; --line-soft: #252D29;
+      --green: #6FBFA3; --green-ink: #9CD6C1; --green-soft: #1E3A32; --green-mid: #3E7A66;
+      --ember: #F0875A; --ember-soft: #3C2418; --slate: #A6B0E0; --slate-soft: #262C45;
+      --ink: #0E1311; --ink-fg: #EEF1EC; --ink-muted: #8FA39A; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141917; --surface: #1C2320; --fg: #EEF1EC; --muted: #A3ADA7; --line: #2C3531; --line-soft: #252D29;
+    --green: #6FBFA3; --green-ink: #9CD6C1; --green-soft: #1E3A32; --green-mid: #3E7A66;
+    --ember: #F0875A; --ember-soft: #3C2418; --slate: #A6B0E0; --slate-soft: #262C45;
+    --ink: #0E1311; --ink-fg: #EEF1EC; --ink-muted: #8FA39A; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.55; margin: 0; }
+  a { color: var(--green); }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+  /* Hero */
+  .hero { background: var(--ink); color: var(--ink-fg); padding-block: 44px 40px; }
+  .hero .in { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: end; }
+  @media (max-width: 860px) { .hero .in { grid-template-columns: minmax(0, 1fr); } }
+  .eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-mid); }
+  .hero h1 { font-family: var(--display); font-size: clamp(32px, 5vw, 48px); line-height: 1.05; font-weight: 800; margin: 8px 0 14px; text-wrap: balance; }
+  .hero p { margin: 0; max-width: 60ch; color: var(--ink-muted); font-size: 16px; }
+  .hero .meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .stat { border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+  .stat .v { font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 12px; font-weight: 700; color: var(--ink-muted); margin-top: 6px; }
+  .stat.accent .v { color: var(--green-mid); }
+  .hero .bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; margin-top: 16px; max-width: 260px; }
+  .hero .bars span { flex: 1; border-radius: 2px 2px 0 0; background: var(--green-mid); opacity: 0.9; }
+
+  /* Body grid */
+  .wrap { max-width: 1120px; margin: 0 auto; padding-block: 36px 80px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+  @media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; } nav.toc { position: static; } }
+  nav.toc { position: sticky; top: 24px; align-self: start; font-size: 13px; }
+  nav.toc ol { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; counter-reset: s; }
+  nav.toc li { counter-increment: s; }
+  nav.toc a { display: flex; gap: 8px; color: var(--muted); text-decoration: none; font-weight: 600; padding: 4px 0; }
+  nav.toc a::before { content: counter(s, decimal-leading-zero); font-family: var(--mono); font-size: 11px; color: var(--green); padding-top: 2px; }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--green); outline: none; }
+  main { min-width: 0; }
+  section { scroll-margin-top: 24px; }
+  h2 { font-family: var(--display); font-size: 26px; font-weight: 800; margin: 52px 0 6px; line-height: 1.15; text-wrap: balance; display: flex; align-items: baseline; gap: 12px; }
+  h2 .n { font-family: var(--mono); font-size: 13px; color: var(--green); font-weight: 600; }
+  section:first-of-type h2 { margin-top: 0; }
+  .sub { color: var(--muted); margin: 0 0 18px; max-width: 70ch; }
+  h3 { font-size: 16px; font-weight: 800; margin: 22px 0 8px; }
+  p { margin: 0 0 12px; max-width: 70ch; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; max-width: 72ch; }
+  li { margin-bottom: 4px; }
+  code { font-family: var(--mono); font-size: 0.88em; background: var(--line-soft); padding: 1px 5px; border-radius: 5px; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--green-soft); color: var(--green-ink); vertical-align: middle; white-space: nowrap; }
+  .pill.ember { background: var(--ember-soft); color: var(--ember); }
+  .pill.slate { background: var(--slate-soft); color: var(--slate); }
+  .pill.grey { background: var(--line-soft); color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 12px 0 18px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; min-width: 0; }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p, .card ul { font-size: 14px; margin-bottom: 6px; }
+  .card .own { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+  .callout { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px; background: var(--green-soft); margin: 14px 0 18px; max-width: 72ch; }
+  .callout.ember { background: var(--ember-soft); }
+  .callout .k { flex-shrink: 0; width: 26px; height: 26px; border-radius: 13px; background: var(--green); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .callout.ember .k { background: var(--ember); }
+  .callout p { margin: 0; font-size: 14.5px; }
+  .tablewrap { overflow-x: auto; margin: 10px 0 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  th { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--line); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* Scope columns */
+  .scope { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 14px 0 6px; }
+  .scope .col { border-radius: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--line); }
+  .scope .col h3 { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .scope .col ul { padding-left: 18px; font-size: 14px; }
+  .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .dot.g { background: var(--green); } .dot.e { background: var(--ember); } .dot.s { background: var(--slate); } .dot.x { background: var(--muted); }
+
+  /* Principles */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 12px 0 8px; counter-reset: p; }
+  .principle { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; counter-increment: p; min-width: 0; }
+  .principle .num { font-family: var(--mono); font-size: 12px; color: var(--green); font-weight: 600; }
+  .principle .num::before { content: "P" counter(p); }
+  .principle h3 { margin: 4px 0 6px; font-size: 15px; }
+  .principle p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* Diagrams */
+  figure { margin: 16px 0 20px; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .svgbox { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  .svgbox.g { fill: var(--green-soft); stroke: var(--green); }
+  .svgbox.e { fill: var(--ember-soft); stroke: var(--ember); }
+  .svgbox.s { fill: var(--slate-soft); stroke: var(--slate); }
+  .svgbox.ink { fill: var(--ink); stroke: var(--ink); }
+  .svgt { fill: var(--fg); font-family: var(--body); font-size: 13px; font-weight: 700; }
+  .svgt.small { font-size: 11px; font-weight: 600; fill: var(--muted); }
+  .svgt.inv { fill: var(--ink-fg); }
+  .svgt.mono { font-family: var(--mono); font-size: 11px; font-weight: 600; fill: var(--muted); }
+  .svgl { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  .svgl.g { stroke: var(--green); }
+  .svgl.dash { stroke-dasharray: 5 4; }
+  .arr { fill: var(--muted); } .arr.g { fill: var(--green); }
+
+  /* Flow steps */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 12px 0 18px; counter-reset: f; }
+  .step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 12px 12px 14px; min-width: 0; counter-increment: f; }
+  .step::before { content: counter(f); position: absolute; top: -9px; left: 12px; width: 20px; height: 20px; border-radius: 10px; background: var(--green); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .step.e::before { background: var(--ember); }
+  .step .who { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 4px 0 2px; }
+  .step .what { font-size: 13.5px; font-weight: 600; }
+
+  /* Decisions */
+  .topics { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 14px 0 6px; }
+  .topic { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; min-width: 0; }
+  .topic header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .topic header .ic { width: 32px; height: 32px; border-radius: 10px; background: var(--green-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .topic header .ic svg { width: 18px; height: 18px; stroke: var(--green-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .topic header h3 { margin: 0; font-size: 16px; }
+  .topic header .cnt { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .dec { padding: 9px 0; border-top: 1px solid var(--line-soft); }
+  .dec .d { font-weight: 700; font-size: 14.5px; }
+  .dec .w { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* Timeline */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; font-weight: 600; color: var(--muted); margin: 6px 0 12px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Sessions stepper */
+  .stepper { position: relative; margin: 14px 0 10px; padding-left: 0; }
+  .stepper::before { content: ""; position: absolute; left: 19px; top: 14px; bottom: 14px; width: 2px; background: var(--line); }
+  .session { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; padding: 8px 0 14px; }
+  .session .n { width: 40px; height: 40px; border-radius: 20px; background: var(--surface); border: 2px solid var(--green); color: var(--green); font-family: var(--mono); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+  .session .body { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-width: 0; }
+  .session .t { font-weight: 800; }
+  .session .b { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .session .b strong { color: var(--fg); font-weight: 700; }
+  .session .q { margin-top: 8px; font-size: 13px; padding: 8px 10px; border-radius: 10px; background: var(--green-soft); color: var(--green-ink); }
+  .session .q b { font-weight: 800; }
+
+  /* Cost chart */
+  .costs { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 10px; max-width: 72ch; }
+  .cost { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr) 64px; gap: 10px; align-items: center; font-size: 13.5px; }
+  .cost .lbl { font-weight: 700; min-width: 0; }
+  .cost .lbl small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .cost .bar { height: 14px; border-radius: 4px; background: var(--line-soft); overflow: hidden; }
+  .cost .bar i { display: block; height: 100%; background: var(--green); border-radius: 4px; }
+  .cost .bar i.e { background: var(--ember); } .cost .bar i.x { background: var(--muted); }
+  .cost .val { text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; }
+  @media (max-width: 520px) { .cost { grid-template-columns: minmax(0, 1fr) 60px; } .cost .bar { grid-column: 1 / -1; } }
+
+  /* Glossary */
+  .gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 12px 0 10px; }
+  .gloss .g { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-width: 0; }
+  .gloss .g h3 { margin: 0 0 4px; font-size: 14px; }
+  .gloss .g p { margin: 0; font-size: 13px; color: var(--muted); }
+  .foot { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+</style>
+
+<header class="hero">
+  <div class="in gutter">
+    <div>
+      <div class="eyebrow">Decision log and roadmap</div>
+      <h1>runcoach backend plan</h1>
+      <p>Everything agreed between 18 and 23 October 2026: what version 1 is, how it is built, why each decision was made, and the first ten working sessions. The reference both of us work from.</p>
+      <div class="bars" aria-hidden="true"><span style="height:54%"></span><span style="height:60%"></span><span style="height:66%"></span><span style="height:48%"></span><span style="height:72%"></span><span style="height:78%"></span><span style="height:84%"></span><span style="height:60%"></span><span style="height:90%"></span><span style="height:96%"></span><span style="height:100%"></span><span style="height:72%"></span><span style="height:54%"></span><span style="height:36%"></span></div>
+      <div class="meta"><span>Owner: Yogesh Tripathi</span><span>Mentor and app developer: Claude</span><span>Status: discussion complete, build not started</span><span>Updated 23 Oct 2026</span></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">4</div><div class="l">services behind one gateway</div></div>
+      <div class="stat"><div class="v">7</div><div class="l">containers on one small server</div></div>
+      <div class="stat accent"><div class="v">Month 7</div><div class="l">interview-ready backend checkpoint</div></div>
+      <div class="stat"><div class="v">13 to 15</div><div class="l">months to the app store</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap gutter">
+  <nav class="toc" aria-label="Contents">
+    <ol>
+      <li><a href="#v1">What version 1 is</a></li>
+      <li><a href="#how">How we work</a></li>
+      <li><a href="#principles">Principles</a></li>
+      <li><a href="#arch">Architecture</a></li>
+      <li><a href="#generation">Plan generation flow</a></li>
+      <li><a href="#decisions">Decisions by topic</a></li>
+      <li><a href="#open">Open and parked</a></li>
+      <li><a href="#model">Domain model</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#phase1">Phase 1 sessions</a></li>
+      <li><a href="#hosting">Hosting and cost</a></li>
+      <li><a href="#rules">Rules table (mock)</a></li>
+      <li><a href="#glossary">Concepts to explain</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="v1">
+      <h2><span class="n">01</span>What version 1 is</h2>
+      <p class="sub">The definition of done, in one paragraph, and the scope lines around it.</p>
+      <div class="callout"><span class="k">v1</span><p>A stranger can install the app from a store, create an account, answer the onboarding questions, get a plan that respects their schedule and fitness, see today's workout, log runs in seconds, give feedback, watch the plan adapt with a stated reason, manage or pause the plan, see their progress, and delete their account. The server survives a provider outage, a double-submitted log, and a bad LLM proposal without corrupting anyone's plan.</p></div>
+      <div class="scope">
+        <div class="col"><h3><span class="dot g"></span>In</h3><ul><li>Accounts, onboarding, feasibility</li><li>LLM plan generation with Java validation</li><li>Today, week, workout detail, logging, feedback</li><li>Adaptive coaching with reasons and undo</li><li>Progress, records, manage plan</li><li>Account deletion with a 14-day window</li></ul></div>
+        <div class="col"><h3><span class="dot e"></span>Behind a flag</h3><ul><li>Health Connect and HealthKit import of runs recorded by watches and other apps</li><li>Built in the app phase, shipped on if stable, otherwise a 1.1 update</li><li>Manual logging is always the base path</li></ul></div>
+        <div class="col"><h3><span class="dot x"></span>Out</h3><ul><li>GPS tracking in the app, guided audio, race recommendations, social</li><li>Social sign-in, Keycloak, Kubernetes</li><li>Second LLM provider</li><li>Config server and service discovery as requirements</li></ul></div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2><span class="n">02</span>How we work</h2>
+      <div class="grid">
+        <div class="card"><h3>Division of labour</h3><p>Yogesh writes the backend. Claude mentors, reviews, and later writes most of the React Native app. The API contract is agreed before app work starts; Yogesh reviews the app code that calls his API.</p></div>
+        <div class="card"><h3>Sessions</h3><p>About 2.5 hours a day in 30 to 45 minute sessions, roughly 15 hours a week. One objective each, something verifiable at the end, one explain-it-back question as interview practice.</p></div>
+        <div class="card"><h3>Backend first</h3><p>No mobile app until the checkpoint. The backend is exercised through automated tests and an API client. The app is the last phase of version 1.</p></div>
+        <div class="card"><h3>The checkpoint</h3><p>An interview-ready backend around month 7. If month 7 arrives without it, scope is cut. Everything after it is the product's timeline, not the career's.</p></div>
+      </div>
+      <p>Keep this document current. Ten minutes at the end of a session beats a weekend of reconstruction before an interview.</p>
+    </section>
+
+    <section id="principles">
+      <h2><span class="n">03</span>Principles that decide the small cases</h2>
+      <p class="sub">When a question comes up that this document does not answer, one of these usually does.</p>
+      <div class="principles">
+        <div class="principle"><div class="num"></div><h3>The client expresses intent; the server decides.</h3><p>A flag like "accepted compressed plan" is the user saying "I understand". The server recomputes the verdict and only honours the flag if its own answer makes it meaningful.</p></div>
+        <div class="principle"><div class="num"></div><h3>LLM output is untrusted input.</h3><p>Same category as a form from a stranger: parsed, validated against the rules, rejected if bad. The LLM never decides whether a plan is accepted.</p></div>
+        <div class="principle"><div class="num"></div><h3>Whoever decides also explains.</h3><p>The server returns the verdict, the inputs it used and the allowed actions. The app renders what it receives and never composes its own reasons.</p></div>
+        <div class="principle"><div class="num"></div><h3>Nothing changes silently, nothing is deleted.</h3><p>Every plan change is a revision with a reason. Undo is a compensating revision. Completed workouts are never touched.</p></div>
+        <div class="principle"><div class="num"></div><h3>Never block logging.</h3><p>A runner can always record a run, even while a job is in flight. Jobs apply with a compare step and conflict rather than corrupt.</p></div>
+        <div class="principle"><div class="num"></div><h3>Measured versus estimated, always labelled.</h3><p>Typed distance and time are measured. Anything derived is estimated. The server labels; the app shows the label.</p></div>
+        <div class="principle"><div class="num"></div><h3>Rest is a workout; missed is not failed.</h3><p>Rest days get full rows and a reason. Missed workouts are neutral and absorbed, never stacked onto the next session.</p></div>
+        <div class="principle"><div class="num"></div><h3>Repeatable by design before idempotency keys.</h3><p>Logging is "set the result of workout 42", so retries are harmless. Keys only where an overwrite is impossible, such as generation.</p></div>
+        <div class="principle"><div class="num"></div><h3>Whoever creates a thing picks its ID.</h3><p>The server creates plans and workouts. The app creates free runs, so it generates their UUIDs. Ownership is checked regardless.</p></div>
+      </div>
+    </section>
+
+    <section id="arch">
+      <h2><span class="n">04</span>Architecture</h2>
+      <p class="sub">Four Spring Boot services behind one gateway, one MySQL server with a schema per service, RabbitMQ for events. Microservices from the start was Yogesh's call, made knowing it costs two to three extra months and about 40 dollars a month more than a monolith.</p>
+      <figure>
+        <svg viewBox="0 0 920 470" role="img" aria-label="Architecture diagram: the phone app talks to the gateway; the gateway routes to identity, training, coach and notification services; each service owns a MySQL schema; training, coach and notification exchange events through RabbitMQ; coach calls the Anthropic API; notification calls an email provider.">
+          <!-- phone -->
+          <rect x="20" y="190" width="110" height="70" rx="14" class="svgbox ink"></rect>
+          <text x="75" y="220" text-anchor="middle" class="svgt inv">React Native</text>
+          <text x="75" y="238" text-anchor="middle" class="svgt inv" style="font-size:11px;font-weight:600">app</text>
+          <!-- gateway -->
+          <rect x="190" y="180" width="130" height="90" rx="14" class="svgbox s"></rect>
+          <text x="255" y="214" text-anchor="middle" class="svgt">Gateway</text>
+          <text x="255" y="232" text-anchor="middle" class="svgt small">token check</text>
+          <text x="255" y="247" text-anchor="middle" class="svgt small">rate limits, /v1 routes</text>
+          <line x1="130" y1="225" x2="186" y2="225" class="svgl"></line>
+          <polygon points="186,225 178,220 178,230" class="arr"></polygon>
+          <text x="158" y="214" text-anchor="middle" class="svgt mono">REST</text>
+          <!-- services -->
+          <rect x="400" y="40" width="190" height="78" rx="14" class="svgbox g"></rect>
+          <text x="495" y="66" text-anchor="middle" class="svgt">Identity</text>
+          <text x="495" y="84" text-anchor="middle" class="svgt small">accounts, JWT, refresh tokens</text>
+          <text x="495" y="99" text-anchor="middle" class="svgt small">verification, reset, deletion</text>
+          <rect x="400" y="140" width="190" height="78" rx="14" class="svgbox g"></rect>
+          <text x="495" y="166" text-anchor="middle" class="svgt">Training</text>
+          <text x="495" y="184" text-anchor="middle" class="svgt small">profile, goal, plan, workouts</text>
+          <text x="495" y="199" text-anchor="middle" class="svgt small">validator, rules, revisions</text>
+          <rect x="400" y="240" width="190" height="78" rx="14" class="svgbox g"></rect>
+          <text x="495" y="266" text-anchor="middle" class="svgt">Coach</text>
+          <text x="495" y="284" text-anchor="middle" class="svgt small">prompts, provider adapter</text>
+          <text x="495" y="299" text-anchor="middle" class="svgt small">limits, cache, LLM log</text>
+          <rect x="400" y="340" width="190" height="78" rx="14" class="svgbox g"></rect>
+          <text x="495" y="366" text-anchor="middle" class="svgt">Notification</text>
+          <text x="495" y="384" text-anchor="middle" class="svgt small">email now, push later</text>
+          <!-- gateway to services -->
+          <path d="M320 215 C 360 215, 360 79, 396 79" class="svgl"></path><polygon points="396,79 388,74 388,84" class="arr"></polygon>
+          <path d="M320 225 C 360 225, 360 179, 396 179" class="svgl"></path><polygon points="396,179 388,174 388,184" class="arr"></polygon>
+          <!-- schemas -->
+          <rect x="640" y="40" width="110" height="34" rx="8" class="svgbox"></rect><text x="695" y="62" text-anchor="middle" class="svgt mono">identity db</text>
+          <rect x="640" y="162" width="110" height="34" rx="8" class="svgbox"></rect><text x="695" y="184" text-anchor="middle" class="svgt mono">training db</text>
+          <rect x="640" y="262" width="110" height="34" rx="8" class="svgbox"></rect><text x="695" y="284" text-anchor="middle" class="svgt mono">coach db</text>
+          <rect x="640" y="362" width="110" height="34" rx="8" class="svgbox"></rect><text x="695" y="384" text-anchor="middle" class="svgt mono">notify db</text>
+          <line x1="590" y1="57" x2="636" y2="57" class="svgl"></line>
+          <line x1="590" y1="179" x2="636" y2="179" class="svgl"></line>
+          <line x1="590" y1="279" x2="636" y2="279" class="svgl"></line>
+          <line x1="590" y1="379" x2="636" y2="379" class="svgl"></line>
+          <text x="695" y="26" text-anchor="middle" class="svgt small">one MySQL server, four schemas</text>
+          <!-- broker -->
+          <rect x="360" y="440" width="270" height="26" rx="8" class="svgbox e"></rect>
+          <text x="495" y="458" text-anchor="middle" class="svgt" style="font-size:12px">RabbitMQ, events via Spring Cloud Stream</text>
+          <path d="M470 218 L 470 236" class="svgl dash g"></path>
+          <path d="M520 318 L 520 336" class="svgl dash g"></path>
+          <path d="M470 418 L 470 436" class="svgl dash g"></path>
+          <path d="M440 318 L 440 336" class="svgl dash g"></path>
+          <text x="382" y="232" text-anchor="end" class="svgt mono">outbox</text>
+          <!-- external -->
+          <rect x="790" y="250" width="110" height="56" rx="14" class="svgbox ink"></rect>
+          <text x="845" y="274" text-anchor="middle" class="svgt inv">Anthropic</text>
+          <text x="845" y="291" text-anchor="middle" class="svgt inv" style="font-size:11px;font-weight:600">API</text>
+          <path d="M590 300 C 700 300, 720 278, 786 278" class="svgl"></path><polygon points="786,278 778,273 778,283" class="arr"></polygon>
+          <rect x="790" y="352" width="110" height="56" rx="14" class="svgbox ink"></rect>
+          <text x="845" y="376" text-anchor="middle" class="svgt inv">Email</text>
+          <text x="845" y="393" text-anchor="middle" class="svgt inv" style="font-size:11px;font-weight:600">provider</text>
+          <path d="M590 400 C 700 400, 720 380, 786 380" class="svgl"></path><polygon points="786,380 778,375 778,385" class="arr"></polygon>
+          <!-- legend -->
+          <line x1="20" y1="420" x2="60" y2="420" class="svgl"></line><text x="68" y="424" class="svgt small">synchronous REST</text>
+          <line x1="20" y1="446" x2="60" y2="446" class="svgl dash g"></line><text x="68" y="450" class="svgt small">asynchronous events</text>
+        </svg>
+        <figcaption>Queries are REST through the gateway. Workflows such as plan generation are events: training writes the request and an outbox row in one transaction, coach consumes and proposes, training validates and applies.</figcaption>
+      </figure>
+      <div class="grid">
+        <div class="card"><h3>Identity</h3><div class="own">Owns users, credentials, refresh tokens, verification and reset tokens</div><p>Hand-built JWT access tokens of about 15 minutes and database-stored refresh tokens of about 30 days, rotated and revocable. Keycloak replaces it in version 2.</p></div>
+        <div class="card"><h3>Training</h3><div class="own">Owns profile, goal, plan, weeks, workouts, results, feedback, revisions, rules</div><p>The whole domain, kept together because workouts, results and revisions need transactions with each other. Splitting it would create the distributed-consistency mess the course warns about.</p></div>
+        <div class="card"><h3>Coach</h3><div class="own">Owns prompts, provider adapter, proposal records, LLM log, limits, cache</div><p>Deliberately dumb: take a request, build a prompt, call the provider, return a proposal. No domain tables, ever. If it starts wanting plan tables, the boundary is drifting.</p></div>
+        <div class="card"><h3>Notification</h3><div class="own">Owns outbound messages and delivery state</div><p>Consumes events and sends email now, push later. The simplest service, so it is where messaging is learned first.</p></div>
+      </div>
+      <h3>Infrastructure choices</h3>
+      <ul>
+        <li><strong>Spring Cloud Gateway</strong> as the only public entry point. Token validation is one replaceable piece so Keycloak can slot in later.</li>
+        <li><strong>RabbitMQ through Spring Cloud Stream</strong>, so a later swap to Kafka is mostly configuration. Outbox on every publisher, idempotent consumers, dead-letter queue.</li>
+        <li><strong>Resilience4j</strong> on every service-to-service and provider call: timeouts, retries with backoff, circuit breakers.</li>
+        <li><strong>OpenTelemetry and Grafana</strong> for logs, metrics and traces, with a request ID that crosses the broker. The stack runs on a laptop until launch.</li>
+        <li><strong>Environment variables and Compose service names</strong> for config and discovery in version 1. Spring Cloud Config and Eureka are optional learning add-ons.</li>
+      </ul>
+      <div class="callout"><span class="k">rc</span><p>Order of birth: identity alone behind the gateway, then training trusting the token, then the broker with notification as the first consumer, then coach with the outbox and the generation saga. One distributed-systems concept per step.</p></div>
+    </section>
+
+    <section id="generation">
+      <h2><span class="n">05</span>Plan generation, end to end</h2>
+      <p class="sub">The one workflow that touches every piece. Each step is a boundary where something can fail, and each has a rule for what happens when it does.</p>
+      <div class="flow">
+        <div class="step"><div class="who">App</div><div class="what">Submits onboarding. One request, complete answers.</div></div>
+        <div class="step"><div class="who">Training</div><div class="what">Validates answers, re-runs feasibility, saves profile and goal, writes a generation request plus an outbox row in one transaction.</div></div>
+        <div class="step"><div class="who">Outbox relay</div><div class="what">Publishes "generate plan" to RabbitMQ. One in-flight job per user; a retry returns the existing job.</div></div>
+        <div class="step"><div class="who">Coach</div><div class="what">Checks limits and cache, builds the versioned prompt, calls Anthropic with structured output, logs tokens and latency.</div></div>
+        <div class="step"><div class="who">Training</div><div class="what">Validates the proposal against the rules. On violations, one repair round with the violations fed back.</div></div>
+        <div class="step e"><div class="who">Outcome</div><div class="what">Accepted: expanded into weeks and workouts with IDs, cached by input hash. Failed twice: honest "try again later"; answers are kept.</div></div>
+      </div>
+      <p>The app polls a status endpoint while the job runs and shows a "building your plan" state. Nothing in the app is blocked by the job except the plan itself.</p>
+    </section>
+
+    <section id="decisions">
+      <h2><span class="n">06</span>Decisions by topic</h2>
+      <p class="sub">Each with its reasoning in a line. Ember marks a decision Yogesh made against the initial recommendation.</p>
+      <div class="topics">
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></span><h3>Accounts</h3><span class="cnt">5</span></header>
+          <div class="dec"><div class="d">Email and password, hand-built with Spring Security.</div><div class="w">To learn token mechanics properly. Social login and Keycloak are version 2.</div></div>
+          <div class="dec"><div class="d">Short access token plus revocable refresh token.</div><div class="w">Stateless tokens cannot be revoked; the refresh token in the database makes sign-out-everywhere and deletion real.</div></div>
+          <div class="dec"><div class="d">Every user-owned row carries the user ID; no endpoint takes one from the client.</div><div class="w">Ownership is a habit, tested on every endpoint.</div></div>
+          <div class="dec"><div class="d">Verification before plan generation; single-use expiring reset links.</div><div class="w">Generation costs money. Email provider chosen at phase 7.</div></div>
+          <div class="dec"><div class="d">Deletion: 14-day deactivation window, then purge.</div><div class="w">A saga: identity marks and publishes, training and coach purge and confirm, identity hard-deletes. Anonymised aggregates kept.</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span><h3>Onboarding and profile</h3><span class="cnt">6</span></header>
+          <div class="dec"><div class="d">One request at the end; the app holds a draft.</div><div class="w">The server only ever sees complete profiles.</div></div>
+          <div class="dec"><div class="d">Server re-validates every answer.</div><div class="w">Old app versions and other clients send old shapes.</div></div>
+          <div class="dec"><div class="d">Profile and goal are separate entities.</div><div class="w">They change for different reasons; a plan is generated from the pair.</div></div>
+          <div class="dec"><div class="d">Metres and seconds, integers, everywhere.</div><div class="w">Clients format. Avoids a class of rounding bugs.</div></div>
+          <div class="dec"><div class="d">Injury data is structured fields only.</div><div class="w">Free text invites medical history we would be responsible for.</div></div>
+          <div class="dec"><div class="d">Editing an answer during an active plan is a plan operation.</div><div class="w">Old answers are kept so a revision can cite "profile version 3".</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 21V4"></path><path d="M4 5h12l-2 4 2 4H4"></path></svg></span><h3>Goal and feasibility</h3><span class="cnt">4</span></header>
+          <div class="dec"><div class="d">Separate feasibility endpoint, re-run inside generation.</div><div class="w">Good screen experience; the server never builds a plan for an unverified goal.</div></div>
+          <div class="dec"><div class="d">Verdict carries weeks, minimum and typical, inputs used, allowed actions, wording.</div><div class="w">The app renders; it does not compose.</div></div>
+          <div class="dec"><div class="d">Rules table is versioned; every plan records its version.</div><div class="w">Tightening a rule never invalidates old plans.</div></div>
+          <div class="dec"><div class="d">Claude seeds the rules table at phase 2; Yogesh owns it.</div><div class="w"></div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"></path></svg></span><h3>Plan generation</h3><span class="cnt">7</span></header>
+          <div class="dec"><div class="d">The LLM generates the whole plan; Java validates; no template fallback. <span class="pill ember">Yogesh's call</span></div><div class="w">More varied, coach-like plans; a fallback is double work and undercuts the AI-coach promise. On failure the user keeps their answers and retries.</div></div>
+          <div class="dec"><div class="d">One repair round, then honest failure.</div><div class="w">A high failure rate means the prompt is wrong, not the validator.</div></div>
+          <div class="dec"><div class="d">Anthropic only, behind a port for a later second adapter.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Background job, status endpoint, one in-flight job per user.</div><div class="w">Whole-plan generation takes tens of seconds.</div></div>
+          <div class="dec"><div class="d">Accepted plans cached by hash of inputs, rules and prompt versions.</div><div class="w">Reproducibility from the database, not the model.</div></div>
+          <div class="dec"><div class="d">5 generations per user per day, shown in the app; 5 adaptations a week; global token budget with alert and hard stop.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">LLM contract drafted at the start of phase 3.</div><div class="w">JSON schema, validator rule list, repair format, prompt versioning.</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M3 10h18M8 2v4M16 2v4"></path></svg></span><h3>Scheduling</h3><span class="cnt">6</span></header>
+          <div class="dec"><div class="d">Workouts are rows with a local calendar date; the profile stores the time zone.</div><div class="w">"Today" is the user's date. Event timestamps are UTC.</div></div>
+          <div class="dec"><div class="d">Missed is marked lazily on app open; scheduler in version 2.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Statuses: scheduled, completed, partial, missed, skipped, moved.</div><div class="w">Skipped is a signal, missed is an absence, partial is below the completion threshold.</div></div>
+          <div class="dec"><div class="d">Reschedule within the week only, from server-provided days; no version bump.</div><div class="w">Hard days 48 hours apart, never onto the long-run day or into the past.</div></div>
+          <div class="dec"><div class="d">Cross-week moves go through the revision engine with confirmation.</div><div class="w">Never a load increase as a side effect. Importance rank decides what is dropped.</div></div>
+          <div class="dec"><div class="d">Optimistic locking per workout and per plan.</div><div class="w">Two devices, two taps: a stale update conflicts.</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16z"></path><path d="M12 6l4 4"></path></svg></span><h3>Logging and feedback</h3><span class="cnt">5</span></header>
+          <div class="dec"><div class="d">One request, prefilled; Done works without touching anything.</div><div class="w">Planned targets stay on the workout; actuals live on the result row.</div></div>
+          <div class="dec"><div class="d">Set-by-overwrite per workout; free runs carry an app-generated UUID.</div><div class="w">Retries are harmless. Events only on real change.</div></div>
+          <div class="dec"><div class="d">Edits any time, deletes allowed; past adaptations not unwound.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Untouched defaults saved but flagged as defaulted.</div><div class="w">The engine weighs deliberate answers more.</div></div>
+          <div class="dec"><div class="d">Health import proposes, user confirms; manual is the base path.</div><div class="w">Completion threshold about 90 percent. Result rows carry source and external ID.</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 8-8"></path><path d="M4 4v5h5"></path><path d="M12 8v4l3 2"></path></svg></span><h3>Adaptive coaching</h3><span class="cnt">6</span></header>
+          <div class="dec"><div class="d">Two stages: Java decides whether and in what scope; the LLM proposes inside that scope.</div><div class="w">The safety decision is testable Java.</div></div>
+          <div class="dec"><div class="d">All eight reason codes in version 1; thresholds in the rules table.</div><div class="w">Pain outranks everything. Suppressed rules are logged.</div></div>
+          <div class="dec"><div class="d">Easing auto-applies with undo; increases and restructures ask.</div><div class="w">Pain never leads to an increase; repeated pain pauses hard sessions.</div></div>
+          <div class="dec"><div class="d">Runs right after the signal; at most one feedback-driven revision a day.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Runner self-adjustments are deterministic Java, no LLM.</div><div class="w">"Not feeling well" never yields an easier workout; it skips and routes to the pause or pain path.</div></div>
+          <div class="dec"><div class="d">Every change is a revision; undo compensates; apply with compare-and-apply.</div><div class="w"></div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"></path></svg></span><h3>Progress and records</h3><span class="cnt">3</span></header>
+          <div class="dec"><div class="d">Computed on read; no precomputed summaries.</div><div class="w">Milliseconds over a few hundred rows; precomputation drifts on edits.</div></div>
+          <div class="dec"><div class="d">Records within about 2 percent of a standard distance, labelled with source.</div><div class="w">Best efforts shown separately.</div></div>
+          <div class="dec"><div class="d">Skips honour consistency, misses break it. No projected finish times.</div><div class="w"></div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></span><h3>Managing the plan</h3><span class="cnt">4</span></header>
+          <div class="dec"><div class="d">One active plan per user; states active, paused, ended, completed; everything kept.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Restart is a new plan; goal or schedule changes regenerate ahead only, with confirmation.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Server-enforced guards on every transition; nothing changes while a job is in flight.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Race result recorded as the outcome, prefilled from a synced run, confirmed by the runner.</div><div class="w">Watch time and chip time differ.</div></div>
+        </div>
+
+        <div class="topic"><header><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></span><h3>Cross-cutting</h3><span class="cnt">3</span></header>
+          <div class="dec"><div class="d">API versioning by path, additive only; app build number in a header.</div><div class="w"></div></div>
+          <div class="dec"><div class="d">Coach sentences are server-generated from reason codes and templates.</div><div class="w">Testable, and never says what the rules did not decide.</div></div>
+          <div class="dec"><div class="d">Store and legal checklist at phase 8.</div><div class="w">Written from what the system does, so after it exists.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="open">
+      <h2><span class="n">07</span>Open and parked</h2>
+      <div class="callout ember"><span class="k">!</span><p><strong>Resume after pause is parked.</strong> Yogesh decides the strategy later. Placeholder in the spec: resuming re-runs feasibility with the weeks left and shows the same fits, tight or too-soon screen as onboarding. Nothing else depends on which way this goes.</p></div>
+      <div class="tablewrap">
+      <table>
+        <tr><th>Item</th><th>When</th><th>Current lean</th></tr>
+        <tr><td>Hosting provider</td><td>At the checkpoint</td><td>Oracle Cloud always-free ARM in Mumbai first; AWS EC2 with a Cloudflare tunnel and an evening schedule as fallback</td></tr>
+        <tr><td>Email provider</td><td>Phase 7</td><td>Any transactional provider with a free tier</td></tr>
+        <tr><td>LLM contract document</td><td>Start of phase 3</td><td>Drafted by Claude, reviewed by Yogesh</td></tr>
+        <tr><td>Seeded rules table</td><td>Start of phase 2</td><td>Drafted by Claude, owned by Yogesh</td></tr>
+        <tr><td>Spring Cloud Config and Eureka</td><td>When there is a reason</td><td>Learning exercises, not requirements</td></tr>
+        <tr><td>Kafka</td><td>After launch</td><td>Swap from RabbitMQ through Spring Cloud Stream as an exercise</td></tr>
+      </table>
+      </div>
+    </section>
+
+    <section id="model">
+      <h2><span class="n">08</span>Domain model sketch</h2>
+      <p class="sub">Derived from the screens. Each service owns its schema; no cross-schema queries. The first migrations will shape these.</p>
+      <div class="tablewrap">
+      <table>
+        <tr><th>Service</th><th>Entities</th><th>Notes</th></tr>
+        <tr><td><span class="pill">Identity</span></td><td>User, RefreshToken, VerificationToken, PasswordResetToken, DeletionRequest</td><td>Password hashes only. Deletion is a saga.</td></tr>
+        <tr><td><span class="pill">Training</span></td><td>RunnerProfile (versioned), RunningGoal, TrainingPlan (state, version, rules version), TrainingWeek, ScheduledWorkout (status, importance, original date, version), WorkoutStep, WorkoutResult (source, external ID), RecoveryFeedback (defaulted flags), PlanRevision (reason code, before and after, proposal reference), PlanGenerationRequest, RulesVersion, Outbox</td><td>Planned and actual are separate rows. Completed workouts are immutable to revisions.</td></tr>
+        <tr><td><span class="pill">Coach</span></td><td>PromptVersion, ProposalRecord (model, prompt version, raw JSON, tokens, latency, validation outcome, repairs), ProposalCache (input hash), UsageCounter</td><td>Purged on deletion; proposals contain profile data.</td></tr>
+        <tr><td><span class="pill">Notification</span></td><td>OutboundMessage (type, recipient, state, attempts)</td><td>Retries from the queue; resend is user-triggered.</td></tr>
+      </table>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <h2><span class="n">09</span>Roadmap and timeline</h2>
+      <p class="sub">About 15 hours a week, Yogesh writing all backend code, learning and debugging included. The checkpoint is the number to hold to.</p>
+      <figure>
+        <svg viewBox="0 0 920 400" role="img" aria-label="Timeline of nine phases over fifteen months with the interview-ready checkpoint at month seven.">
+          <g class="svgt mono">
+            <text x="230" y="20">0</text><text x="322" y="20">2</text><text x="414" y="20">4</text><text x="506" y="20">6</text><text x="598" y="20">8</text><text x="690" y="20">10</text><text x="782" y="20">12</text><text x="874" y="20">14</text>
+          </g>
+          <text x="230" y="38" class="svgt small">months</text>
+          <g class="svgl" style="stroke: var(--line-soft)">
+            <line x1="234" y1="46" x2="234" y2="372"></line><line x1="326" y1="46" x2="326" y2="372"></line><line x1="418" y1="46" x2="418" y2="372"></line><line x1="510" y1="46" x2="510" y2="372"></line><line x1="602" y1="46" x2="602" y2="372"></line><line x1="694" y1="46" x2="694" y2="372"></line><line x1="786" y1="46" x2="786" y2="372"></line><line x1="878" y1="46" x2="878" y2="372"></line>
+          </g>
+          <!-- rows: y step 36; x = 234 + months*46 -->
+          <g class="svgt" style="font-size:12.5px">
+            <text x="10" y="70">1 Foundations, identity, gateway</text>
+            <text x="10" y="106">2 Training service, profile, goal</text>
+            <text x="10" y="142">3 Events, coach, generation</text>
+            <text x="10" y="178">4 Scheduling</text>
+            <text x="10" y="214">5 Logging and feedback</text>
+            <text x="10" y="250">6 Adaptation</text>
+            <text x="10" y="286">7 Progress, manage, email, deletion</text>
+            <text x="10" y="322">8 Production hardening</text>
+            <text x="10" y="358">9 React Native app and store</text>
+          </g>
+          <g>
+            <rect x="234" y="58" width="92" height="16" rx="4" style="fill: var(--green)"></rect>
+            <rect x="326" y="94" width="35" height="16" rx="4" style="fill: var(--green)"></rect>
+            <rect x="361" y="130" width="115" height="16" rx="4" style="fill: var(--green)"></rect>
+            <rect x="476" y="166" width="46" height="16" rx="4" style="fill: var(--green)"></rect>
+            <rect x="522" y="202" width="23" height="16" rx="4" style="fill: var(--green)"></rect>
+            <rect x="556" y="238" width="58" height="16" rx="4" style="fill: var(--green-mid)"></rect>
+            <rect x="614" y="274" width="46" height="16" rx="4" style="fill: var(--green-mid)"></rect>
+            <rect x="660" y="310" width="46" height="16" rx="4" style="fill: var(--green-mid)"></rect>
+            <rect x="706" y="346" width="160" height="16" rx="4" style="fill: var(--slate)"></rect>
+          </g>
+          <line x1="556" y1="46" x2="556" y2="372" style="stroke: var(--ember); stroke-width: 2; stroke-dasharray: 4 3"></line>
+          <rect x="500" y="376" width="112" height="20" rx="10" style="fill: var(--ember)"></rect>
+          <text x="556" y="390" text-anchor="middle" class="svgt inv" style="font-size:11px">Checkpoint, month 7</text>
+        </svg>
+        <figcaption>Dark green: before the checkpoint. Light green: after it. Slate: the app phase, mostly Claude's work with Yogesh integrating and reviewing. Levers if it slips: defer email further, ship with three adaptation rules, skip the optional Spring Cloud add-ons.</figcaption>
+      </figure>
+      <div class="tablewrap">
+      <table>
+        <tr><th>Phase</th><th>What lands</th><th class="num">Months, cumulative</th></tr>
+        <tr><td>1</td><td>Repo, Docker Compose, Flyway, CI, identity with register, login, JWT, refresh tokens; gateway with token validation and rate limits. Email flows deferred to phase 7.</td><td class="num">2</td></tr>
+        <tr><td>2</td><td>Training service born: profile, goal, feasibility endpoint, rules table v1, ownership tests.</td><td class="num">2.75</td></tr>
+        <tr><td>3</td><td>RabbitMQ, notification as first consumer, outbox, coach service, LLM contract, Anthropic adapter, validator, repair round, generation saga, cache, limits, LLM log.</td><td class="num">5.25</td></tr>
+        <tr><td>4</td><td>Plan expansion, Today and week endpoints, time zones, lazy missed, reschedule rules, optimistic locking.</td><td class="num">6.25</td></tr>
+        <tr><td>5</td><td>Results by overwrite, free runs, feedback defaults, events on real change.</td><td class="num">6.75</td></tr>
+        <tr><td><span class="pill ember">Checkpoint</span></td><td>Interview-ready backend: tested, Dockerised, documented, deployed to the cheap server.</td><td class="num">7</td></tr>
+        <tr><td>6</td><td>Stage-one rules, scoped proposals, auto-ease with undo, confirmations, compare-and-apply across services.</td><td class="num">8.25</td></tr>
+        <tr><td>7</td><td>Summaries, records, plan state machine, verification and reset flows, deletion saga with the 14-day window.</td><td class="num">9.25</td></tr>
+        <tr><td>8</td><td>Alerts, backups, cost controls, API versioning, retention, store and legal checklist, tracing in production.</td><td class="num">10.25</td></tr>
+        <tr><td>9</td><td>App mostly by Claude, health import behind a flag, Yogesh's review and integration, TestFlight, store review.</td><td class="num">13 to 15</td></tr>
+      </table>
+      </div>
+    </section>
+
+    <section id="phase1">
+      <h2><span class="n">10</span>Phase 1, the first ten sessions</h2>
+      <p class="sub">Each is 30 to 45 minutes with a verifiable outcome. Yogesh writes the code; Claude reviews. The question at the end of each is the interview rehearsal.</p>
+      <div class="stepper">
+        <div class="session"><div class="n">01</div><div class="body"><div class="t">Repository and the identity skeleton</div><div class="b">Create the <code>runcoach</code> repo with a folder per service and an <code>infra/</code> folder. Generate <code>identity-service</code> from Spring Initializr: Boot 3.5.x, Java 21, Web, Data JPA, MySQL Driver, Flyway, Validation, Actuator, Security, Docker Compose Support, Testcontainers. Boot it against Dockerised MySQL; health is UP.</div><div class="q"><b>Explain:</b> why Flyway instead of Hibernate creating tables.</div></div></div>
+        <div class="session"><div class="n">02</div><div class="body"><div class="t">First migration and entity</div><div class="b">Flyway migration for <code>users</code>: id, email unique, password hash, status, time zone, created at. <code>User</code> entity and repository. One Testcontainers test that boots the context and proves the migration applied.</div><div class="q"><b>Explain:</b> what the persistence context is and when an entity becomes managed.</div></div></div>
+        <div class="session"><div class="n">03</div><div class="body"><div class="t">Registration endpoint</div><div class="b"><code>POST /v1/auth/register</code> with a request DTO, Bean Validation, BCrypt hashing, 201 on success, 409 on duplicate email. Integration tests for both.</div><div class="q"><b>Explain:</b> why the DTO is not the entity.</div></div></div>
+        <div class="session"><div class="n">04</div><div class="body"><div class="t">Error format and request IDs</div><div class="b">Global exception handler producing RFC 9457 problem details for validation, conflicts and unknown errors. A filter that assigns a request ID and logs it on every line.</div><div class="q"><b>Explain:</b> why clients need one error shape.</div></div></div>
+        <div class="session"><div class="n">05</div><div class="body"><div class="t">Spring Security, stateless</div><div class="b">Security filter chain: register and login open, everything else denied, no sessions. <code>POST /v1/auth/login</code> issues a signed JWT access token with a 15 minute expiry.</div><div class="q"><b>Explain:</b> what the filter chain is and in what order filters run.</div></div></div>
+        <div class="session"><div class="n">06</div><div class="body"><div class="t">Verifying tokens and the current user</div><div class="b">A JWT filter that authenticates requests; <code>GET /v1/me</code>; the current-user resolution every later endpoint reuses. Tests for 401 without a token, 401 expired, 200 valid.</div><div class="q"><b>Explain:</b> what is inside a JWT and why the server can trust it without a database lookup.</div></div></div>
+        <div class="session"><div class="n">07</div><div class="body"><div class="t">Refresh tokens</div><div class="b">Refresh token table, rotation on use, reuse detection that revokes the family, sign-out and sign-out-everywhere. Tests for the replay case.</div><div class="q"><b>Explain:</b> why refresh tokens live in the database when access tokens do not.</div></div></div>
+        <div class="session"><div class="n">08</div><div class="body"><div class="t">The gateway</div><div class="b">Spring Cloud Gateway project routing <code>/v1/auth/**</code> and <code>/v1/me</code> to identity, validating the access token at the edge with the public key. Docker Compose for gateway, identity and MySQL together.</div><div class="q"><b>Explain:</b> what the gateway must never do.</div></div></div>
+        <div class="session"><div class="n">09</div><div class="body"><div class="t">CI</div><div class="b">GitHub Actions: build both services, run tests with a MySQL container, build and push Docker images on main. Green main is the only thing that deploys.</div><div class="q"><b>Explain:</b> why the test database is a real MySQL, not an in-memory substitute.</div></div></div>
+        <div class="session"><div class="n">10</div><div class="body"><div class="t">Rate limiting and the phase review</div><div class="b">In-memory rate limits on register and login at the gateway. The account <code>deactivated</code> state and the deletion request stub. Update this document with what changed.</div><div class="q"><b>Explain:</b> the three things a backend must do before it trusts a request.</div></div></div>
+      </div>
+    </section>
+
+    <section id="hosting">
+      <h2><span class="n">11</span>Hosting and cost</h2>
+      <p class="sub">Nothing is hosted until the checkpoint. After that, one small ARM machine in India runs all seven containers with Docker Compose. Yogesh runs between 6 and 9 in the evening, so a scheduled window covers personal use.</p>
+      <div class="costs">
+        <div class="cost"><div class="lbl">Oracle Cloud always-free ARM, Mumbai<small>Try first. Needs a credit card for a hold; capacity often unavailable, keep trying.</small></div><div class="bar"><i style="width:0.5%"></i></div><div class="val">$0</div></div>
+        <div class="cost"><div class="lbl">AWS t4g.medium, scheduled 5 hours a day<small>Cloudflare tunnel, no public IP, 4 GB with tight JVM limits.</small></div><div class="bar"><i style="width:14%"></i></div><div class="val">$5</div></div>
+        <div class="cost"><div class="lbl">AWS t4g.large, scheduled 5 hours a day<small>8 GB, comfortable. Coach jobs finish inside the window.</small></div><div class="bar"><i style="width:29%"></i></div><div class="val">$10</div></div>
+        <div class="cost"><div class="lbl">AWS t4g.large, always on<small>When strangers are using it.</small></div><div class="bar"><i style="width:100%"></i></div><div class="val">$35</div></div>
+        <div class="cost"><div class="lbl">Monolith on the smallest instance, for comparison<small>What the architecture choice cost.</small></div><div class="bar"><i class="x" style="width:36%"></i></div><div class="val">$12</div></div>
+      </div>
+      <p>Supporting services, all with free tiers: GitHub's container registry, nightly database dumps to object storage, an uptime monitor, error tracking, a domain at about 12 dollars a year. LLM spend is separate and scales with users at a few cents per plan.</p>
+    </section>
+
+    <section id="rules">
+      <h2><span class="n">12</span>Rules table, mock version from the prototype</h2>
+      <p class="sub">Used by the goal screen in the design prototype only. The real table is seeded at phase 2, versioned, and owned by Yogesh.</p>
+      <div class="tablewrap">
+      <table>
+        <tr><th>Goal</th><th class="num">Under 2 km</th><th class="num">2 to 5 km</th><th class="num">5 to 10 km</th><th class="num">10 km plus</th></tr>
+        <tr><td>First 5K</td><td class="num">8 / 10</td><td class="num">5 / 8</td><td class="num">3 / 6</td><td class="num">3 / 4</td></tr>
+        <tr><td>First 10K</td><td class="num">12 / 14</td><td class="num">8 / 10</td><td class="num">5 / 8</td><td class="num">4 / 6</td></tr>
+        <tr><td>Half marathon</td><td class="num">20 / 24</td><td class="num">16 / 18</td><td class="num">10 / 14</td><td class="num">8 / 12</td></tr>
+        <tr><td>Marathon</td><td class="num">28 / 32</td><td class="num">24 / 28</td><td class="num">16 / 20</td><td class="num">12 / 16</td></tr>
+        <tr><td>Everyday pace</td><td class="num">6 / 8</td><td class="num">6 / 8</td><td class="num">6 / 8</td><td class="num">6 / 8</td></tr>
+      </table>
+      </div>
+      <p>Cells are minimum / typical weeks by comfortable-distance tier. Below minimum is too soon, between minimum and typical is tight, at or above typical fits. The real table will also carry the weekly growth limit, cutback cadence, taper length, hard-day spacing, long-run share, completion threshold, and the eight adaptation thresholds.</p>
+    </section>
+
+    <section id="glossary">
+      <h2><span class="n">13</span>Concepts you should be able to explain</h2>
+      <p class="sub">Each came up as a design decision. Explaining the decision and the alternative you rejected is the interview value of this project.</p>
+      <div class="gloss">
+        <div class="g"><h3>Determinism</h3><p>Same input, same output. Lost in the LLM, recovered in the validator and the input-hash cache.</p></div>
+        <div class="g"><h3>Idempotency</h3><p>Doing it twice has the same effect as once. Achieved by design (PUT overwrite) before reaching for keys.</p></div>
+        <div class="g"><h3>Optimistic locking</h3><p>A version number on the row; a stale update is rejected rather than overwriting.</p></div>
+        <div class="g"><h3>Snapshot, work, compare-and-apply</h3><p>Read a version, do slow work outside any transaction, apply in a short transaction that re-checks the version.</p></div>
+        <div class="g"><h3>Outbox pattern</h3><p>Write the event with the data in one transaction; a relay publishes it. No lost or phantom events.</p></div>
+        <div class="g"><h3>Saga</h3><p>A workflow across services with compensation instead of a shared transaction. Generation and deletion are the two in version 1.</p></div>
+        <div class="g"><h3>Transaction boundary</h3><p>Wrap the save, never the network call. A transaction holds a connection; a 20 second LLM call inside one drains the pool.</p></div>
+        <div class="g"><h3>Database per service</h3><p>Schemas owned by one service each, no cross-schema queries. Data ownership is what makes boundaries real.</p></div>
+        <div class="g"><h3>Boundary by operational profile</h3><p>Coach is separate because its latency, failure modes, cost, secrets and scaling differ, not because the LLM is special.</p></div>
+        <div class="g"><h3>Rule versioning</h3><p>Every plan records the rules version that built it, so tightening a rule never invalidates old plans.</p></div>
+        <div class="g"><h3>Time zones</h3><p>Calendar dates for workouts in the user's zone; UTC timestamps for events. "Today" is computed per user.</p></div>
+        <div class="g"><h3>Client intent, server decision</h3><p>Flags express what the user wants; the server recomputes what is allowed. The compressed-plan flag is the worked example.</p></div>
+      </div>
+    </section>
+
+    <div class="foot">Companion to the design prototype on the runcoach app design canvas. Decisions dated 18 to 23 October 2026. The resume-after-pause strategy is the one parked item.</div>
+  </main>
+</div>

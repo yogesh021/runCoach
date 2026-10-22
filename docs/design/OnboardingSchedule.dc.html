@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding: your week</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;color:#16201C;background:#F6F5F1}
+a{color:#1F6F5A}a:hover{color:#174F41}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 100vh; box-sizing: border-box; background: #F6F5F1; display: flex; flex-direction: column">
+  <header style="padding: 60px 24px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <a href="OnboardingGoal.dc.html" aria-label="Back" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -12px; border-radius: 22px; color: #16201C; text-decoration: none">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </a>
+      <span style="font-size: 13px; font-weight: 600; color: #5B655F">Step 6 of 8</span>
+    </div>
+    <div style="height: 6px; border-radius: 3px; background: #E3E1DA; overflow: hidden"><div style="width: 75%; height: 100%; background: #1F6F5A"></div></div>
+  </header>
+  <main style="flex: 1; padding: 22px 24px 0; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-size: 26px; line-height: 1.2; font-weight: 800">When can you run?</h1>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B655F">We schedule around your week and never put hard days back to back.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700">Runs per week</span>
+      <div style="display: flex; gap: 8px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 15px; font-weight: 600; cursor: pointer"><input type="radio" name="runs" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">2</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 15px; font-weight: 600; cursor: pointer"><input type="radio" name="runs" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">3</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer"><input type="radio" name="runs" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">4</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 15px; font-weight: 600; cursor: pointer"><input type="radio" name="runs" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">5</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 15px; font-weight: 600; cursor: pointer"><input type="radio" name="runs" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">6</label>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700">Which days?</span>
+      <div style="display: flex; gap: 6px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="day" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Mon</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="checkbox" name="day" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Tue</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="day" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Wed</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="checkbox" name="day" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Thu</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="day" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Fri</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="checkbox" name="day" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Sat</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 12px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="checkbox" name="day" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Sun</label>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 14px; height: 52px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA">
+        <label for="long-run-day" style="font-size: 14px; font-weight: 600">Long run day</label>
+        <select id="long-run-day" style="height: 40px; padding: 0 8px; border: 0; background: transparent; font-family: inherit; font-size: 14px; font-weight: 700; color: #1F6F5A">
+          <option>Saturday</option>
+          <option selected="">Sunday</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700">How long can a typical run take?</span>
+      <div style="display: flex; gap: 8px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="duration" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">30 min</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="radio" name="duration" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">45 min</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="duration" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">60 min</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="duration" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">90 min +</label>
+      </div>
+    </div>
+    <label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #E3E1DA; cursor: pointer">
+      <input type="checkbox" style="width: 20px; height: 20px; margin: 1px 0 0; accent-color: #1F6F5A; flex-shrink: 0">
+      <span style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 14px; font-weight: 700">I'm managing an injury or pain</span>
+        <span style="font-size: 12px; line-height: 1.4; color: #5B655F">We'll keep intensity lower and ask how you feel after each run. This is not medical advice.</span>
+      </span>
+    </label>
+  </main>
+  <footer style="padding: 16px 24px 36px; display: flex; flex-direction: column; gap: 12px">
+    <a href="PlanSummary.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; background: #1F6F5A; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none">Build my plan</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

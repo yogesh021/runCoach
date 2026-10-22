@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding: your goal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;color:#16201C;background:#F6F5F1}
+a{color:#1F6F5A}a:hover{color:#174F41}
+.scroll{scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 100vh; box-sizing: border-box; background: #F6F5F1; display: flex; flex-direction: column">
+  <header style="padding: 60px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <a href="Main.dc.html" aria-label="Back" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -12px; border-radius: 22px; color: #16201C; text-decoration: none">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </a>
+      <span style="font-size: 13px; font-weight: 600; color: #5B655F">Step 4 of 8</span>
+    </div>
+    <div style="height: 6px; border-radius: 3px; background: #E3E1DA; overflow: hidden"><div style="width: 50%; height: 100%; background: #1F6F5A"></div></div>
+  </header>
+  <main class="scroll" style="flex: 1; min-height: 0; padding: 20px 24px 28px; display: flex; flex-direction: column; gap: 18px; overflow-x: hidden">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-size: 26px; line-height: 1.2; font-weight: 800">What are you training for?</h1>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B655F">Your goal sets the plan length and the kind of workouts you get.</p>
+    </div>
+    <div role="group" aria-label="Goal" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{goals}}" as="g" hint-placeholder-count="6">
+        <sc-if value="{{g.selected}}" hint-placeholder-val="{{false}}">
+          <button type="button" onClick="{{g.pick}}" aria-pressed="true" style="position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 0 36px 0 14px; height: 60px; border-radius: 14px; background: #E6F2EE; border: 2px solid #1F6F5A; color: #174F41; font-family: inherit; text-align: left; cursor: pointer">
+            <span style="font-size: 14px; font-weight: 800">{{g.label}}</span>
+            <span style="font-size: 12px; font-weight: 600; color: #174F41">{{g.sub}}</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1F6F5A" aria-hidden="true" style="position: absolute; top: 10px; right: 10px"><circle cx="12" cy="12" r="11"></circle><path d="M7.5 12.5l3 3 6-7" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+        </sc-if>
+        <sc-if value="{{g.unselected}}" hint-placeholder-val="{{true}}">
+          <button type="button" onClick="{{g.pick}}" aria-pressed="false" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 0 14px; height: 60px; border-radius: 14px; background: #FFFFFF; border: 2px solid #E3E1DA; color: #16201C; font-family: inherit; text-align: left; cursor: pointer">
+            <span style="font-size: 14px; font-weight: 700">{{g.label}}</span>
+            <span style="font-size: 12px; color: #5B655F">{{g.sub}}</span>
+          </button>
+        </sc-if>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{switchNotice}}" hint-placeholder-val="{{false}}">
+      <div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 12px; background: #E6F2EE; border: 1px solid #BFDCD0">
+        <span style="font-size: 13px; line-height: 1.4; color: #174F41"><strong>{{switchNotice}}</strong></span>
+        <button type="button" onClick="{{undoSwitch}}" style="flex-shrink: 0; height: 36px; padding: 0 12px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #BFDCD0; color: #174F41; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">Undo</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isHabit}}" hint-placeholder-val="{{false}}">
+      <p style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E3E1DA; font-size: 13px; line-height: 1.45; color: #5B655F">No race needed. We'll build steady, repeatable weeks and check in as you go.</p>
+    </sc-if>
+
+    <sc-if value="{{isFaster}}" hint-placeholder-val="{{false}}">
+      <section style="display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E3E1DA">
+        <span style="font-size: 15px; font-weight: 700">Get faster at what?</span>
+        <div role="group" aria-label="Distance to improve" style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{fasterTargets}}" as="f" hint-placeholder-count="5">
+            <sc-if value="{{f.selected}}" hint-placeholder-val="{{false}}">
+              <button type="button" onClick="{{f.pick}}" aria-pressed="true" style="height: 40px; padding: 0 14px; border-radius: 20px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{f.label}}</button>
+            </sc-if>
+            <sc-if value="{{f.unselected}}" hint-placeholder-val="{{true}}">
+              <button type="button" onClick="{{f.pick}}" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 20px; background: #FFFFFF; border: 1.5px solid #E3E1DA; color: #16201C; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{f.label}}</button>
+            </sc-if>
+          </sc-for>
+        </div>
+        <sc-if value="{{hasFasterTarget}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; gap: 10px">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+              <label for="benchmark" style="font-size: 12px; font-weight: 600; color: #5B655F">{{benchLabel}}</label>
+              <input id="benchmark" type="text" inputmode="numeric" value="{{benchmark}}" onChange="{{setBenchmark}}" placeholder="{{benchPlaceholder}}" style="box-sizing: border-box; width: 100%; height: 48px; padding: 0 12px; border-radius: 12px; border: 1.5px solid #E3E1DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16201C">
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+              <label for="target-time" style="font-size: 12px; font-weight: 600; color: #5B655F">{{targetLabel}} <span style="font-weight: 500">(optional)</span></label>
+              <input id="target-time" type="text" inputmode="numeric" value="{{targetTime}}" onChange="{{setTargetTime}}" placeholder="{{benchPlaceholder}}" style="box-sizing: border-box; width: 100%; height: 48px; padding: 0 12px; border-radius: 12px; border: 1.5px solid #E3E1DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16201C">
+            </div>
+          </div>
+          <sc-if value="{{benchmarkError}}" hint-placeholder-val="{{false}}">
+            <p role="alert" style="margin: 0; font-size: 12px; font-weight: 600; color: #C24E0F">{{benchmarkError}}</p>
+          </sc-if>
+          <sc-if value="{{targetError}}" hint-placeholder-val="{{false}}">
+            <p role="alert" style="margin: 0; font-size: 12px; font-weight: 600; color: #C24E0F">{{targetError}}</p>
+          </sc-if>
+          <sc-if value="{{benchHint}}" hint-placeholder-val="{{false}}">
+            <p style="margin: 0; font-size: 12px; line-height: 1.4; color: #5B655F">{{benchHint}}</p>
+          </sc-if>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{showRace}}" hint-placeholder-val="{{true}}">
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: baseline; justify-content: space-between">
+          <span style="font-size: 15px; font-weight: 700">Do you have a race booked?</span>
+          <span style="font-size: 12px; font-weight: 600; color: #5B655F">Optional</span>
+        </div>
+        <div role="group" aria-label="Race booked" style="display: flex; gap: 8px">
+          <sc-if value="{{raceYes}}" hint-placeholder-val="{{true}}">
+            <button type="button" onClick="{{setRaceYes}}" aria-pressed="true" style="flex: 1; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Yes, I have a date</button>
+          </sc-if>
+          <sc-if value="{{raceNotYes}}" hint-placeholder-val="{{false}}">
+            <button type="button" onClick="{{setRaceYes}}" aria-pressed="false" style="flex: 1; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; color: #16201C; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Yes, I have a date</button>
+          </sc-if>
+          <sc-if value="{{raceNo}}" hint-placeholder-val="{{false}}">
+            <button type="button" onClick="{{setRaceNo}}" aria-pressed="true" style="flex: 1; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Not yet</button>
+          </sc-if>
+          <sc-if value="{{raceNotNo}}" hint-placeholder-val="{{true}}">
+            <button type="button" onClick="{{setRaceNo}}" aria-pressed="false" style="flex: 1; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; color: #16201C; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Not yet</button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{raceNo}}" hint-placeholder-val="{{false}}">
+          <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B655F">{{noRaceLine}}</p>
+        </sc-if>
+
+        <sc-if value="{{raceYes}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; gap: 10px">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+              <label for="race-date" style="font-size: 12px; font-weight: 600; color: #5B655F">Race date</label>
+              <input id="race-date" type="date" value="{{raceDate}}" onChange="{{setRaceDate}}" style="box-sizing: border-box; width: 100%; height: 48px; padding: 0 12px; border-radius: 12px; border: 1.5px solid #E3E1DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16201C">
+            </div>
+            <sc-if value="{{showFinish}}" hint-placeholder-val="{{true}}">
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+                <label for="finish-time" style="font-size: 12px; font-weight: 600; color: #5B655F">Finish time <span style="font-weight: 500">(optional)</span></label>
+                <input id="finish-time" type="text" inputmode="numeric" value="{{finishTime}}" onChange="{{setFinishTime}}" placeholder="e.g. 2:15:00" style="box-sizing: border-box; width: 100%; height: 48px; padding: 0 12px; border-radius: 12px; border: 1.5px solid #E3E1DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16201C">
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{dateError}}" hint-placeholder-val="{{false}}">
+            <p role="alert" style="margin: 0; font-size: 12px; font-weight: 600; color: #C24E0F">{{dateError}}</p>
+          </sc-if>
+          <sc-if value="{{finishError}}" hint-placeholder-val="{{false}}">
+            <p role="alert" style="margin: 0; font-size: 12px; font-weight: 600; color: #C24E0F">{{finishError}}</p>
+          </sc-if>
+          <sc-if value="{{noDateYet}}" hint-placeholder-val="{{false}}">
+            <p style="margin: 0; font-size: 12px; line-height: 1.4; color: #5B655F">We'll check the date against your goal and current running before you continue.</p>
+          </sc-if>
+
+          <sc-if value="{{fbOk}}" hint-placeholder-val="{{true}}">
+            <div role="status" style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 12px; background: #E6F2EE; border: 1px solid #BFDCD0">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#174F41" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>
+                <span style="font-size: 14px; font-weight: 800; color: #174F41">{{fbTitle}}</span>
+              </div>
+              <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #16201C">{{fbBody}}</p>
+              <span style="font-size: 11px; font-weight: 600; color: #5B655F">{{fbSource}}</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{fbTight}}" hint-placeholder-val="{{false}}">
+            <div role="status" style="display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #FFF7EC; border: 1px solid #F0D7B8">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C24E0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
+                <span style="font-size: 14px; font-weight: 800; color: #C24E0F">{{fbTitle}}</span>
+              </div>
+              <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #16201C">{{fbBody}}</p>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <sc-for list="{{fbOptions}}" as="o" hint-placeholder-count="2">
+                  <button type="button" onClick="{{o.run}}" style="min-height: 44px; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA; color: #16201C; font-family: inherit; font-size: 13px; line-height: 1.3; font-weight: 700; text-align: left; white-space: normal; cursor: pointer">{{o.label}}</button>
+                </sc-for>
+              </div>
+              <sc-if value="{{acknowledged}}" hint-placeholder-val="{{false}}">
+                <span style="font-size: 12px; font-weight: 700; color: #174F41">Compressed plan confirmed. You can continue.</span>
+              </sc-if>
+              <span style="font-size: 11px; font-weight: 600; color: #5B655F">{{fbSource}}</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{fbShort}}" hint-placeholder-val="{{false}}">
+            <div role="alert" style="display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #FBEDE4; border: 1px solid #F0C8B0">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C24E0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4M12 17.5h.01"></path></svg>
+                <span style="font-size: 14px; font-weight: 800; color: #C24E0F">{{fbTitle}}</span>
+              </div>
+              <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #16201C">{{fbBody}}</p>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <sc-for list="{{fbOptions}}" as="o" hint-placeholder-count="2">
+                  <button type="button" onClick="{{o.run}}" style="min-height: 44px; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #E3E1DA; color: #16201C; font-family: inherit; font-size: 13px; line-height: 1.3; font-weight: 700; text-align: left; white-space: normal; cursor: pointer">{{o.label}}</button>
+                </sc-for>
+              </div>
+              <span style="font-size: 11px; font-weight: 600; color: #5B655F">{{fbSource}}</span>
+            </div>
+          </sc-if>
+        </sc-if>
+      </section>
+    </sc-if>
+  </main>
+  <footer style="padding: 12px 24px 36px; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #ECEAE3; background: #F6F5F1">
+    <sc-if value="{{canContinue}}" hint-placeholder-val="{{true}}">
+      <a href="OnboardingSchedule.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; background: #1F6F5A; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none">Continue</a>
+    </sc-if>
+    <sc-if value="{{cannotContinue}}" hint-placeholder-val="{{false}}">
+      <button type="button" disabled aria-disabled="true" style="height: 56px; border-radius: 14px; background: #C9D6D0; border: 0; color: #FFFFFF; font-family: inherit; font-weight: 700; font-size: 17px">Continue</button>
+      <span style="text-align: center; font-size: 12px; font-weight: 600; color: #5B655F">{{continueHint}}</span>
+    </sc-if>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"preset":{"editor":"enum","options":["empty","completion","faster","race-valid","race-warning"],"default":"race-valid","section":"State"},"$preview":{"width":390,"height":1080}}'>
+// MOCK DATA. In the real app these come from the server: the runner profile
+// captured on step 1 and the feasibility verdict from the plan-validation rules.
+const MOCK_TODAY = '2026-10-26';
+const MOCK_PROFILE = { tier: '5-10', label: 'your current 5 to 10 km' };
+// Minimum and typical weeks [min, typical] by goal distance and comfortable-distance tier.
+const MOCK_RULES = {
+  '5k':       { 'under2': [8, 10],  '2-5': [5, 8],   '5-10': [3, 6],   '10plus': [3, 4] },
+  '10k':      { 'under2': [12, 14], '2-5': [8, 10],  '5-10': [5, 8],   '10plus': [4, 6] },
+  'half':     { 'under2': [20, 24], '2-5': [16, 18], '5-10': [10, 14], '10plus': [8, 12] },
+  'marathon': { 'under2': [28, 32], '2-5': [24, 28], '5-10': [16, 20], '10plus': [12, 16] },
+  'pace':     { 'under2': [6, 8],   '2-5': [6, 8],   '5-10': [6, 8],   '10plus': [6, 8] }
+};
+const GOALS = [
+  { id: 'habit',    label: 'Build a habit', sub: 'Run consistently' },
+  { id: '5k',       label: 'First 5K',      sub: '5 km without stopping' },
+  { id: '10k',      label: 'First 10K',     sub: '10 km finish' },
+  { id: 'half',     label: 'Half marathon', sub: '21.1 km finish' },
+  { id: 'marathon', label: 'Marathon',      sub: '42.2 km finish' },
+  { id: 'faster',   label: 'Get faster',    sub: 'Beat a time you have' }
+];
+const FASTER = [
+  { id: '5k', label: '5K' }, { id: '10k', label: '10K' }, { id: 'half', label: 'Half marathon' },
+  { id: 'marathon', label: 'Marathon' }, { id: 'pace', label: 'Everyday pace' }
+];
+const NAMES = { '5k': '5K', '10k': '10K', 'half': 'half marathon', 'marathon': 'marathon', 'pace': 'pace' };
+const DOWNGRADE = { 'marathon': 'half', 'half': '10k', '10k': '5k', '5k': 'habit' };
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function parseDate(s) { return s ? new Date(s + 'T00:00:00Z') : null; }
+function fmtDate(d) { return d.getUTCDate() + ' ' + MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+function isoDate(d) { return d.toISOString().slice(0, 10); }
+function nextSundayFrom(d) {
+  const out = new Date(d.getTime());
+  const add = (7 - out.getUTCDay()) % 7;
+  out.setUTCDate(out.getUTCDate() + add);
+  return out;
+}
+function isValidTime(s) { return /^(\d{1,2}:)?[0-5]?\d:[0-5]\d$/.test(s.trim()); }
+
+function mockFeasibility(dist, raceDate) {
+  const d = parseDate(raceDate);
+  const t = parseDate(MOCK_TODAY);
+  if (!d || isNaN(d.getTime())) return null;
+  if (d.getTime() <= t.getTime()) return { status: 'invalid', body: 'Pick a date after today.' };
+  const weeks = Math.floor((d.getTime() - t.getTime()) / (7 * 86400000));
+  const rule = MOCK_RULES[dist][MOCK_PROFILE.tier];
+  const min = rule[0], typical = rule[1];
+  const name = NAMES[dist];
+  const title = weeks + ' weeks to race day';
+  const minDate = nextSundayFrom(new Date(t.getTime() + min * 7 * 86400000));
+  const typDate = nextSundayFrom(new Date(t.getTime() + typical * 7 * 86400000));
+  if (weeks >= typical) {
+    return { status: 'ok', weeks, title,
+      body: 'Based on what you have told us so far, ' + weeks + ' weeks fits a ' + name + ' build with room for easy weeks and a taper. Paces and weekly volume get refined after your first two weeks of training.' };
+  }
+  if (weeks >= min) {
+    return { status: 'tight', weeks, title,
+      body: 'For a runner at your level, a ' + name + ' build usually takes ' + typical + ' weeks. ' + weeks + ' is possible but compressed: fewer easy weeks and a shorter taper.',
+      options: [
+        { act: 'move', date: isoDate(typDate), label: 'Move the race to ' + fmtDate(typDate) + ' or later' },
+        { act: 'ack', label: 'Keep ' + fmtDate(d) + ' and continue with a compressed plan' }
+      ] };
+  }
+  const options = [{ act: 'move', date: isoDate(minDate), label: 'Move the race to ' + fmtDate(minDate) + ' or later' }];
+  const dg = DOWNGRADE[dist];
+  if (dg) {
+    options.push({ act: 'switch', to: dg, label: 'Keep ' + fmtDate(d) + ', train for ' + (dg === 'habit' ? 'a running habit' : 'a ' + NAMES[dg]) + ' instead' });
+  }
+  return { status: 'short', weeks, title,
+    body: 'For a runner at your level, a ' + name + ' build needs at least ' + min + ' weeks. The plan rules will not build one in ' + weeks + ', so pick one of these.',
+    options };
+}
+
+function presetState(p) {
+  const base = { ready: true, goal: null, fasterTarget: null, benchmark: '', targetTime: '', hasRace: null, raceDate: '', finishTime: '', acknowledged: false, switched: null };
+  switch (p) {
+    case 'empty': return base;
+    case 'completion': return { ...base, goal: 'half', hasRace: false };
+    case 'faster': return { ...base, goal: 'faster', fasterTarget: '10k', benchmark: '58:02', targetTime: '55:00', hasRace: null };
+    case 'race-warning': return { ...base, goal: 'half', hasRace: true, raceDate: '2026-12-13' };
+    case 'race-valid':
+    default: return { ...base, goal: 'half', hasRace: true, raceDate: '2027-02-07', finishTime: '2:15:00' };
+  }
+}
+
+class Component extends DCLogic {
+  getS() {
+    if (this.state && this.state.ready) return this.state;
+    return presetState(this.props.preset);
+  }
+  patch(changes) {
+    this.setState({ ...this.getS(), ...changes });
+  }
+  pickGoal(id, switched) {
+    const s = this.getS();
+    if (s.goal === id) return;
+    const changes = { goal: id, acknowledged: false, switched: switched || null };
+    if (id !== 'faster') changes.fasterTarget = null;
+    if (id === 'habit') { changes.hasRace = null; changes.raceDate = ''; changes.finishTime = ''; }
+    this.patch(changes);
+  }
+  runOption(o) {
+    const s = this.getS();
+    if (o.act === 'move') this.patch({ raceDate: o.date, acknowledged: false });
+    else if (o.act === 'ack') this.patch({ acknowledged: true });
+    else if (o.act === 'switch') {
+      if (s.goal === 'faster') this.patch({ fasterTarget: o.to, acknowledged: false, switched: { kind: 'target', from: s.fasterTarget, to: o.to } });
+      else this.pickGoal(o.to, { kind: 'goal', from: s.goal, to: o.to });
+    }
+  }
+  undoSwitch() {
+    const s = this.getS();
+    if (!s.switched) return;
+    if (s.switched.kind === 'target') this.patch({ fasterTarget: s.switched.from, acknowledged: false, switched: null });
+    else this.patch({ goal: s.switched.from, acknowledged: false, switched: null });
+  }
+  renderVals() {
+    const s = this.getS();
+    const isFaster = s.goal === 'faster';
+    const isHabit = s.goal === 'habit';
+    const dist = isFaster ? s.fasterTarget : s.goal;
+    const hasFasterTarget = isFaster && !!s.fasterTarget;
+
+    const goals = GOALS.map((g) => ({ ...g, selected: s.goal === g.id, unselected: s.goal !== g.id, pick: () => this.pickGoal(g.id) }));
+    const fasterTargets = FASTER.map((f) => ({ ...f, selected: s.fasterTarget === f.id, unselected: s.fasterTarget !== f.id, pick: () => this.patch({ fasterTarget: f.id, acknowledged: false, switched: null }) }));
+
+    const goalName = (id) => { const g = GOALS.find((x) => x.id === id); return g ? g.label : id; };
+    const targetName = (id) => id === 'pace' ? 'everyday pace' : NAMES[id];
+    let switchNotice = '';
+    if (s.switched && s.switched.kind === 'goal' && s.goal === s.switched.to) {
+      switchNotice = 'Goal changed from ' + goalName(s.switched.from) + ' to ' + goalName(s.switched.to) + ' to fit your race date.';
+    } else if (s.switched && s.switched.kind === 'target' && s.fasterTarget === s.switched.to) {
+      switchNotice = 'Distance changed from ' + targetName(s.switched.from) + ' to ' + targetName(s.switched.to) + ' to fit your race date.';
+    }
+
+    const isPace = s.fasterTarget === 'pace';
+    const benchLabel = isPace ? 'Current easy pace per km' : (hasFasterTarget ? 'Recent ' + NAMES[s.fasterTarget] + ' time' : 'Recent time');
+    const targetLabel = isPace ? 'Target pace per km' : (hasFasterTarget ? 'Target ' + NAMES[s.fasterTarget] + ' time' : 'Target time');
+    const benchPlaceholder = isPace ? 'e.g. 6:30' : 'e.g. 58:02';
+    const timeMsg = 'Use mm:ss or h:mm:ss, like 58:02 or 1:58:02';
+    const benchmarkError = s.benchmark && !isValidTime(s.benchmark) ? timeMsg : '';
+    const targetError = s.targetTime && !isValidTime(s.targetTime) ? timeMsg : '';
+    const benchHint = hasFasterTarget && !s.benchmark ? 'No recent time? Fine. Paces start from your first week of easy runs instead.' : '';
+
+    const showRace = !!s.goal && !isHabit && (!isFaster || hasFasterTarget);
+    const raceYes = showRace && s.hasRace === true;
+    const raceNo = showRace && s.hasRace === false;
+    const showFinish = raceYes && !isFaster;
+    const finishError = s.finishTime && !isValidTime(s.finishTime) ? timeMsg : '';
+    const noRaceLine = isFaster
+      ? 'No problem. The plan ends with a timed ' + NAMES[s.fasterTarget] + ' effort you can run anywhere.'
+      : 'No problem. The plan ends with a ' + NAMES[s.goal] + ' distance run you can do anywhere, and you can add a race later.';
+
+    const fb = raceYes && dist ? mockFeasibility(dist, s.raceDate) : null;
+    const dateError = fb && fb.status === 'invalid' ? fb.body : '';
+    const fbOk = !!fb && fb.status === 'ok';
+    const fbTight = !!fb && fb.status === 'tight';
+    const fbShort = !!fb && fb.status === 'short';
+    const fbOptions = fb && fb.options ? fb.options.map((o) => ({ ...o, run: () => this.runOption(o) })) : [];
+    const noDateYet = raceYes && !s.raceDate;
+
+    const hasErrors = !!(benchmarkError || targetError || finishError || dateError);
+    let continueHint = '';
+    if (!s.goal) continueHint = 'Pick a goal to continue';
+    else if (isFaster && !hasFasterTarget) continueHint = 'Choose what you want to get faster at';
+    else if (hasErrors) continueHint = 'Fix the highlighted field to continue';
+    else if (fbShort) continueHint = 'Choose one of the options above to continue';
+    else if (fbTight && !s.acknowledged) continueHint = 'Confirm the compressed plan or move the date';
+    const canContinue = continueHint === '';
+
+    return {
+      goals, fasterTargets, isFaster, isHabit, hasFasterTarget,
+      switchNotice, undoSwitch: () => this.undoSwitch(),
+      benchLabel, targetLabel, benchPlaceholder, benchmark: s.benchmark, targetTime: s.targetTime, benchmarkError, targetError, benchHint,
+      setBenchmark: (e) => this.patch({ benchmark: e.target.value }),
+      setTargetTime: (e) => this.patch({ targetTime: e.target.value }),
+      showRace, raceYes, raceNo, raceNotYes: showRace && !raceYes, raceNotNo: showRace && !raceNo,
+      setRaceYes: () => this.patch({ hasRace: true }),
+      setRaceNo: () => this.patch({ hasRace: false, acknowledged: false }),
+      noRaceLine, showFinish, raceDate: s.raceDate, finishTime: s.finishTime, dateError, finishError, noDateYet,
+      setRaceDate: (e) => this.patch({ raceDate: e.target.value, acknowledged: false }),
+      setFinishTime: (e) => this.patch({ finishTime: e.target.value }),
+      fbOk, fbTight, fbShort, fbTitle: fb ? fb.title : '', fbBody: fb ? fb.body : '', fbOptions,
+      fbSource: 'Based on: experience level, comfortable distance. Plan rules v1 (mock data in this prototype).',
+      acknowledged: s.acknowledged,
+      canContinue, cannotContinue: !canContinue, continueHint
+    };
+  }
+}
+</script>
+</body>
+</html>

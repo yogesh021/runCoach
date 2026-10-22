@@ -1,0 +1,494 @@
+<title>runcoach Pathway</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* Layout: compact header with a progress ring and the next step; a phase rail (vertical on desktop, horizontal strip on phones); step rows with one check control that expand in place. Three surface levels so dark mode has depth. */
+  :root {
+    --bg: #F3F2ED; --surface: #FFFFFF; --surface-2: #FAF9F6; --fg: #16201C; --muted: #5B655F; --line: #E1DFD7; --line-soft: #EEECE5;
+    --green: #1F6F5A; --green-ink: #174F41; --green-soft: #E3F0EA; --green-mid: #8FC2AE;
+    --ember: #C24E0F; --ember-soft: #FBEBE0; --slate: #3F4A7A; --slate-soft: #E6E9F4;
+    --ink: #14201B; --ink-2: #1D2B25; --ink-fg: #FFFFFF; --ink-muted: #B9C9C1;
+    --display: 'Manrope', system-ui, sans-serif; --body: 'Manrope', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --shadow: 0 1px 2px rgba(22,32,28,0.06), 0 6px 18px rgba(22,32,28,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1412; --surface: #182019; --surface-2: #1F2922; --fg: #EDF1EC; --muted: #9AA69F; --line: #2A342E; --line-soft: #222B26;
+      --green: #7CC9AC; --green-ink: #A9DDC8; --green-soft: #1C3A30; --green-mid: #3F8A70;
+      --ember: #F2905F; --ember-soft: #3D2417; --slate: #AEB8E6; --slate-soft: #242B45;
+      --ink: #0A0E0C; --ink-2: #131A16; --ink-fg: #EDF1EC; --ink-muted: #8AA095;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1412; --surface: #182019; --surface-2: #1F2922; --fg: #EDF1EC; --muted: #9AA69F; --line: #2A342E; --line-soft: #222B26;
+    --green: #7CC9AC; --green-ink: #A9DDC8; --green-soft: #1C3A30; --green-mid: #3F8A70;
+    --ember: #F2905F; --ember-soft: #3D2417; --slate: #AEB8E6; --slate-soft: #242B45;
+    --ink: #0A0E0C; --ink-2: #131A16; --ink-fg: #EDF1EC; --ink-muted: #8AA095;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; margin: 0; }
+  button { font-family: inherit; }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+  /* Header */
+  .hero { background: var(--ink); color: var(--ink-fg); padding-block: 26px 22px; }
+  .hero .in { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(260px, 380px); gap: 22px; align-items: center; }
+  @media (max-width: 820px) { .hero .in { grid-template-columns: auto minmax(0, 1fr); } .hero .next { grid-column: 1 / -1; } }
+  .ring { width: 96px; height: 96px; position: relative; flex-shrink: 0; }
+  .ring svg { width: 96px; height: 96px; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 9; }
+  .ring .bg { stroke: rgba(255,255,255,0.12); }
+  .ring .fg { stroke: var(--green-mid); stroke-linecap: round; transition: stroke-dashoffset 400ms ease; }
+  .ring .cp { stroke: var(--ember); stroke-width: 3; }
+  .ring .v { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+  .hero h1 { font-family: var(--display); font-size: clamp(24px, 4vw, 32px); line-height: 1.05; font-weight: 800; margin: 4px 0 8px; }
+  .hero .sum { font-size: 13.5px; color: var(--ink-muted); font-weight: 600; display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero .sum b { color: var(--ink-fg); font-variant-numeric: tabular-nums; }
+  .next { background: var(--ink-2); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .next .k { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); }
+  .next .t { font-family: var(--display); font-size: 17px; font-weight: 800; line-height: 1.25; }
+  .next .d { font-size: 12.5px; color: var(--ink-muted); }
+  .next .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .btn { height: 40px; padding: 0 14px; border-radius: 11px; border: 1.5px solid transparent; font-weight: 700; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .btn.primary { background: var(--green-mid); color: var(--ink); }
+  .btn.ghost { background: transparent; color: var(--ink-fg); border-color: rgba(255,255,255,0.25); }
+  .btn.soft { background: var(--green-soft); color: var(--green-ink); }
+  .btn.plain { background: var(--surface); color: var(--fg); border-color: var(--line); }
+
+  .status-line { max-width: 1080px; margin: 0 auto; padding-block: 10px 0; font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+  .status-line .dot { width: 8px; height: 8px; border-radius: 4px; background: var(--green); flex-shrink: 0; }
+  .status-line .dot.off { background: var(--ember); }
+
+  /* Body */
+  .wrap { max-width: 1080px; margin: 0 auto; padding-block: 16px 90px; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 820px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
+
+  /* Phase rail */
+  .rail { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 4px; }
+  @media (max-width: 820px) { .rail { position: static; flex-direction: row; overflow-x: auto; gap: 8px; padding-bottom: 6px; scrollbar-width: none; margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; } .rail::-webkit-scrollbar { display: none; } }
+  .ph { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: center; text-align: left; background: transparent; border: 1.5px solid transparent; border-radius: 14px; padding: 8px 10px; cursor: pointer; color: var(--fg); min-height: 56px; }
+  .ph:hover { background: var(--surface); }
+  .ph.active { background: var(--surface); border-color: var(--line); box-shadow: var(--shadow); }
+  @media (max-width: 820px) { .ph { flex: 0 0 auto; min-width: 190px; background: var(--surface); border-color: var(--line); } .ph.active { border-color: var(--green); } }
+  .ph .r { width: 34px; height: 34px; position: relative; }
+  .ph .r svg { width: 34px; height: 34px; transform: rotate(-90deg); }
+  .ph .r circle { fill: none; stroke-width: 4; }
+  .ph .r .b { stroke: var(--line); }
+  .ph .r .f { stroke: var(--green); stroke-linecap: round; }
+  .ph.cp .r .f { stroke: var(--ember); }
+  .ph .r .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--muted); }
+  .ph.full .r .n { color: var(--green); }
+  .ph .t { font-size: 13px; font-weight: 800; line-height: 1.2; }
+  .ph .m { font-size: 11.5px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ph.cp .t { color: var(--ember); }
+
+  /* Steps */
+  .phead { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 4px 0 12px; }
+  .phead h2 { font-family: var(--display); font-size: 22px; font-weight: 800; margin: 0; line-height: 1.15; }
+  .phead .k { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .phead p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; max-width: 64ch; }
+  .tools { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .tools label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; min-height: 44px; }
+  .list { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
+  .row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line-soft); min-height: 64px; }
+  .row:first-child { border-top: 0; }
+  .row.open { background: var(--surface-2); }
+  .chk { width: 44px; height: 44px; border-radius: 22px; border: 2px solid var(--line); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; flex-shrink: 0; }
+  .chk svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .row.doing .chk { border-color: var(--green); color: var(--green); }
+  .row.doing .chk svg.tick { display: none; }
+  .row.done .chk { background: var(--green); border-color: var(--green); color: #fff; }
+  .row.done .chk svg.half { display: none; }
+  .row.todo .chk svg { display: none; }
+  .row .main { min-width: 0; cursor: pointer; }
+  .row .title { font-weight: 800; font-size: 15px; line-height: 1.3; }
+  .row.done .title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+  .row .meta { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .row .meta .c { color: var(--slate); }
+  .row .idx { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .row .act { display: flex; gap: 6px; align-items: center; }
+  .mini { height: 36px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 700; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
+  .mini.go { background: var(--green); border-color: var(--green); color: #fff; }
+  .mini.on { background: var(--green-soft); border-color: var(--green-soft); color: var(--green-ink); }
+  @media (max-width: 560px) { .row { grid-template-columns: 44px minmax(0, 1fr); } .row .act { grid-column: 2; justify-content: flex-start; } }
+  .det { grid-column: 1 / -1; display: none; padding: 4px 14px 16px 70px; }
+  @media (max-width: 560px) { .det { padding-left: 14px; } }
+  .row.open .det { display: block; }
+  .det .goal { margin: 0 0 12px; font-size: 14px; max-width: 70ch; }
+  .blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+  .block { border-radius: 12px; padding: 10px 12px; min-width: 0; background: var(--surface); border: 1px solid var(--line); }
+  .block .h { font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .block p { margin: 0; font-size: 13.5px; }
+  .block.q { background: var(--green-soft); border-color: transparent; }
+  .block.q .h { color: var(--green-ink); }
+  .block.q p { color: var(--green-ink); font-weight: 600; }
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 10px; }
+  .notes label { font-size: 11.5px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; }
+  textarea { width: 100%; min-height: 76px; resize: vertical; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; font-family: inherit; font-size: 13.5px; background: var(--surface); color: var(--fg); }
+  textarea:focus { outline: 2px solid var(--green); outline-offset: 1px; border-color: transparent; }
+  .foot-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .saved { font-size: 11.5px; color: var(--muted); }
+  .empty { padding: 24px; text-align: center; color: var(--muted); }
+  .cpcard { background: var(--ember-soft); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; font-size: 13.5px; }
+  .cpcard b { color: var(--ember); }
+  .foot { margin-top: 28px; font-size: 12.5px; color: var(--muted); grid-column: 1 / -1; }
+  .foot a { color: var(--green); }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .ring .fg { transition: none; } }
+</style>
+
+<header class="hero">
+  <div class="in gutter">
+    <div class="ring" aria-hidden="true">
+      <svg viewBox="0 0 96 96"><circle class="bg" cx="48" cy="48" r="40"></circle><circle class="fg" id="ringfg" cx="48" cy="48" r="40" stroke-dasharray="251.3" stroke-dashoffset="251.3"></circle><circle class="cp" id="ringcp" cx="48" cy="48" r="40" stroke-dasharray="2 249.3"></circle></svg>
+      <div class="v" id="pct">0%</div>
+    </div>
+    <div>
+      <div class="eyebrow">Learning and implementation pathway</div>
+      <h1>runcoach pathway</h1>
+      <div class="sum"><span><b id="c-done">0</b> of <b id="c-total">0</b> steps</span><span>about <b id="s-done">0</b> of <b id="s-total">0</b> sessions</span><span id="c-doing"></span></div>
+    </div>
+    <div class="next">
+      <div class="k">Up next</div>
+      <div class="t" id="next-t">Loading</div>
+      <div class="d" id="next-d"></div>
+      <div class="row" id="next-row"></div>
+    </div>
+  </div>
+</header>
+
+<div class="status-line gutter" id="storage"><span class="dot"></span><span>Connecting to your progress store</span></div>
+
+<div class="wrap gutter">
+  <nav class="rail" id="rail" aria-label="Phases"></nav>
+  <section>
+    <div class="phead">
+      <div><div class="k" id="ph-k"></div><h2 id="ph-title"></h2><p id="ph-desc"></p></div>
+      <div class="tools"><label><input type="checkbox" id="hide-done"> Hide done</label><span id="ph-count"></span></div>
+    </div>
+    <div id="cp-slot"></div>
+    <div class="list" id="steps"></div>
+  </section>
+  <div class="foot">Tap a step to open it. The circle cycles to do, doing, done. Companion to the <a href="https://claude.ai/artifact/2e8zWFTBStxf9msd3DLYWV">runcoach backend plan</a>. Phases 2 to 9 are outlines, refined into exact sessions when each begins.</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var PHASES = [
+    { n: 1, title: 'Foundations, identity, gateway', desc: 'Repo, Docker Compose, Flyway, CI, the identity service with hand-built tokens, and the gateway. Everything later reuses what lands here.', months: '0 to 2' },
+    { n: 2, title: 'Training service, profile, goal', desc: 'The domain service is born with its own schema. Profile, goal, feasibility, and the first versioned rules table.', months: '2 to 2.75' },
+    { n: 3, title: 'Events, coach, generation', desc: 'RabbitMQ, the outbox, the coach service, the LLM contract, the validator, and the full generation saga.', months: '2.75 to 5.25' },
+    { n: 4, title: 'Scheduling', desc: 'Plans become workouts with dates. Today and week endpoints, time zones, missed, rescheduling, optimistic locking.', months: '5.25 to 6.25' },
+    { n: 5, title: 'Logging and feedback', desc: 'The most frequent write in the system, done by a tired person on a phone.', months: '6.25 to 6.75' },
+    { n: 0, title: 'Checkpoint', desc: 'The interview-ready backend. Tested, Dockerised, documented, deployed. Everything after this is the product\'s timeline.', months: '7', cp: true },
+    { n: 6, title: 'Adaptation', desc: 'The coaching engine: Java decides, the LLM proposes inside a scope, nothing changes silently.', months: '7 to 8.25' },
+    { n: 7, title: 'Progress, manage, email, deletion', desc: 'Summaries and records, the plan state machine, the email flows, and the deletion saga.', months: '8.25 to 9.25' },
+    { n: 8, title: 'Production hardening', desc: 'Deploy, backups, alerts, tracing, cost controls, versioning, retention, the store checklist.', months: '9.25 to 10.25' },
+    { n: 9, title: 'React Native app and store', desc: 'Mostly Claude\'s code with Yogesh integrating and reviewing. Health import behind a flag.', months: '10.25 to 15' }
+  ];
+
+  // id, phase, title, sessions, goal, learn, explain
+  var STEPS = [
+    ['p1-01', 1, 'Repository and the identity skeleton', 1, 'Create the runcoach repo with a folder per service and infra/. Generate identity-service from Spring Initializr (Boot 3.5.x, Java 21, Web, Data JPA, MySQL, Flyway, Validation, Actuator, Security, Docker Compose Support, Testcontainers). Boot it against Dockerised MySQL; health is UP.', 'Project structure, Spring profiles, Compose support.', 'Why Flyway instead of Hibernate creating tables?'],
+    ['p1-02', 1, 'First migration and User entity', 1, 'Flyway migration for users (id, email unique, password hash, status, time zone, created at). User entity and repository. One Testcontainers test that boots the context and proves the migration applied.', 'Entity lifecycle and the persistence context.', 'What is the persistence context and when does an entity become managed?'],
+    ['p1-03', 1, 'Registration endpoint', 2, 'POST /v1/auth/register with a request DTO, Bean Validation, BCrypt hashing, 201 on success, 409 on duplicate email. Integration tests for both.', 'DTOs versus entities, validation, hashing.', 'Why is the DTO not the entity?'],
+    ['p1-04', 1, 'Error format and request IDs', 1, 'Global exception handler producing RFC 9457 problem details for validation, conflicts and unknown errors. A filter that assigns a request ID and logs it on every line.', 'Centralised error handling, correlation IDs.', 'Why do clients need one error shape?'],
+    ['p1-05', 1, 'Spring Security, stateless', 2, 'Security filter chain: register and login open, everything else denied, no sessions. POST /v1/auth/login issues a signed JWT access token with a 15 minute expiry.', 'The security filter chain, stateless auth.', 'What is the filter chain and in what order do filters run?'],
+    ['p1-06', 1, 'Verifying tokens and the current user', 1, 'A JWT filter that authenticates requests; GET /v1/me; the current-user resolution every later endpoint reuses. Tests for 401 without a token, 401 expired, 200 valid.', 'JWT structure and signature verification.', 'What is inside a JWT and why can the server trust it without a database lookup?'],
+    ['p1-07', 1, 'Refresh tokens', 2, 'Refresh token table, rotation on use, reuse detection that revokes the family, sign-out and sign-out-everywhere. Tests for the replay case.', 'Revocable state alongside stateless tokens.', 'Why do refresh tokens live in the database when access tokens do not?'],
+    ['p1-08', 1, 'The gateway', 2, 'Spring Cloud Gateway routing /v1/auth/** and /v1/me to identity, validating the access token at the edge with the public key. Docker Compose for gateway, identity and MySQL together.', 'Edge validation, routing, one public entry point.', 'What must the gateway never do?'],
+    ['p1-09', 1, 'CI', 1, 'GitHub Actions: build both services, run tests with a MySQL container, build and push Docker images on main. Green main is the only thing that deploys.', 'Continuous integration, Testcontainers in CI.', 'Why is the test database a real MySQL and not an in-memory substitute?'],
+    ['p1-10', 1, 'Rate limiting and the deactivated state', 1, 'In-memory rate limits on register and login at the gateway. The account deactivated state and the deletion request stub.', 'Abuse protection at the edge.', 'What three things must a backend do before it trusts a request?'],
+    ['p1-11', 1, 'Security test matrix', 2, 'For every route: 401 unauthenticated, 403 wrong user, 200 right user, expired and tampered tokens. A reusable test helper for authenticated requests.', 'Authentication versus authorization in tests.', 'What is the difference between 401 and 403, and when does each apply?'],
+    ['p1-12', 1, 'Dockerfiles and the full Compose stack', 1, 'Multi-stage Dockerfile per service, JVM memory flags, memory limits and restart policies in Compose, log rotation.', 'Image layering, container memory.', 'Why does a JVM in a container need an explicit memory cap?'],
+    ['p1-13', 1, 'Structured logs, health and readiness', 1, 'JSON logs with request ID and user ID, Actuator health with a database check, separate liveness and readiness.', 'Observability basics.', 'What is the difference between liveness and readiness, and who uses each?'],
+    ['p1-14', 1, 'Configuration and secrets', 1, 'All config from environment variables with sane defaults; secrets never in files; profiles for local, test, staging, prod.', '12-factor configuration.', 'Where does a secret live in each environment, and how does the app find it?'],
+    ['p1-15', 1, 'Phase review', 1, 'Update the decision log, draw architecture diagram v1, list what you can explain and what still needs reinforcement.', 'Reflection.', 'Describe the request path from phone to database for login, naming every component.'],
+
+    ['p2-01', 2, 'Training service skeleton with its own schema', 1, 'Second service, second schema on the same MySQL server, its own Flyway history, routed by the gateway under /v1/training-free paths like /v1/profile.', 'Database per service.', 'Why must training never read the identity tables?'],
+    ['p2-02', 2, 'Trusting the gateway\'s identity', 1, 'Training reads the user ID from the validated token, never from the body. The ownership filter helper every repository call uses.', 'Zero trust between services.', 'Should training verify the token again, or trust the gateway? Argue both sides.'],
+    ['p2-03', 2, 'Runner profile, versioned', 2, 'Profile entity with enums for experience and tiers, metres and seconds as integers, time zone, injury flag. Each save creates a new version row.', 'Value objects, enums, append-only versions.', 'Why keep old profile versions instead of updating in place?'],
+    ['p2-04', 2, 'Running goal', 1, 'Goal entity: type, optional race date, optional target time, faster-target and benchmark for Get faster. Server-side validation of every combination.', 'Conditional validation.', 'Which goal and race-date combinations are invalid and why?'],
+    ['p2-05', 2, 'Rules table v1', 1, 'Seeded rules table with a version row: minimum and typical weeks per goal and tier, growth limit, cutback cadence, taper, hard-day spacing, thresholds.', 'Rules as versioned data.', 'What breaks if a rule change is a code change instead of a data change?'],
+    ['p2-06', 2, 'Feasibility, pure Java', 2, 'A class with no Spring dependency: profile, goal, today, rules in; verdict, weeks, inputs used, allowed actions out. Unit tests for fits, tight, too soon and edge dates.', 'Pure functions and testability.', 'Why is feasibility easier to test than the registration endpoint?'],
+    ['p2-07', 2, 'Feasibility endpoint and onboarding submit', 1, 'POST /v1/goals/feasibility and POST /v1/onboarding (profile plus goal in one transaction, feasibility re-run, accepted-compressed flag honoured only when tight).', 'Client intent, server decision.', 'Explain the accepted-compressed-plan flag and why the server recomputes.'],
+    ['p2-08', 2, 'Ownership tests and phase review', 1, 'Every training endpoint tested for cross-user access. Decision log updated.', 'Authorization testing as a habit.', 'How would you prove no endpoint leaks another user\'s data?'],
+
+    ['p3-01', 3, 'RabbitMQ and a first message', 1, 'RabbitMQ in Compose. Spring Cloud Stream producer in training, consumer in a throwaway test, one event round trip.', 'Brokers, exchanges, queues, consumer groups.', 'What happens to a message if the consumer is down?'],
+    ['p3-02', 3, 'Notification service', 1, 'Third service consuming a welcome event and logging it. The OutboundMessage table and delivery state.', 'Event consumers.', 'Why is notification the right first consumer to build?'],
+    ['p3-03', 3, 'The outbox', 2, 'Outbox table in training, written in the same transaction as the data; a relay that publishes and marks rows sent.', 'Outbox pattern.', 'What goes wrong if you publish to the broker inside the transaction, or after it?'],
+    ['p3-04', 3, 'Idempotent consumers', 1, 'Consumers record processed event IDs and ignore repeats. A test that delivers the same event twice.', 'At-least-once delivery.', 'Why can the same event arrive twice, and why can you not prevent it at the broker?'],
+    ['p3-05', 3, 'The LLM contract', 2, 'Document session with Claude: the JSON schema a plan proposal must match, the validator\'s full rule list with thresholds, the repair message format, prompt versioning.', 'Contracts before code.', 'Name five things the validator must reject.'],
+    ['p3-06', 3, 'Coach service and the first API call', 1, 'Fourth service. Anthropic SDK call from a plain main, print the text and token counts, run it twice.', 'External API clients, token usage.', 'If this call ran inside a controller, what two problems would it cause?'],
+    ['p3-07', 3, 'Structured output', 1, 'PlanProposal as Java records; typed response from the model against the shared schema; Jackson parsing and Bean Validation on the result.', 'Structured outputs, JSON schema.', 'Why is structured output safer than asking for JSON in the prompt?'],
+    ['p3-08', 3, 'Prompt assembly and versioning', 2, 'Build the prompt from profile, goal and rules rendered as constraints. Prompts stored in resources with a version string recorded on every proposal.', 'Prompt engineering as versioned artifacts.', 'Why record the prompt version on each proposal?'],
+    ['p3-09', 3, 'The validator', 3, 'In training, pure Java: volume growth, long-run share, hard-day spacing, placement on available days, race alignment, taper present, steps add up. Unit tests for each rule and for a known-good plan.', 'Domain rules as code.', 'Which rule would you add first if runners reported injuries?'],
+    ['p3-10', 3, 'The generation saga', 3, 'Training writes request plus outbox; coach consumes, checks limits and cache, generates, publishes proposal; training validates and applies with compare-and-apply. Status endpoint. One in-flight job per user.', 'Sagas, async workflows, snapshot and compare.', 'Walk through what happens if coach crashes halfway.'],
+    ['p3-11', 3, 'Repair round and honest failure', 2, 'Violations fed back once; second failure marks the job failed with the reason logged; user keeps answers and can retry tomorrow.', 'Failure handling.', 'Why only one repair round?'],
+    ['p3-12', 3, 'Expanding a plan into rows', 2, 'Accepted proposal becomes TrainingPlan, TrainingWeek, ScheduledWorkout and WorkoutStep rows with server IDs, in one transaction.', 'Transaction boundaries.', 'Why is the expansion one transaction and the LLM call outside it?'],
+    ['p3-13', 3, 'Limits, budget and cache', 2, 'Per-user daily limit shown in responses, global token budget with alert and hard stop, proposal cache keyed by input hash plus versions.', 'Cost controls, caching.', 'How does the cache restore reproducibility?'],
+    ['p3-14', 3, 'Resilience and the LLM log', 2, 'Resilience4j timeouts, retries, circuit breaker on the provider call. Every call logged with tokens, latency, outcome, repairs. Four dashboard numbers.', 'Circuit breakers, observability for integrations.', 'When should a circuit breaker open, and what does the user see?'],
+
+    ['p4-01', 4, 'Time zones done properly', 1, 'Workouts carry a local date; "today" computed from the profile time zone; tests across zones and daylight-saving boundaries.', 'Dates versus instants.', 'Why do workouts store a date but results store a timestamp?'],
+    ['p4-02', 4, 'Today and week endpoints', 2, 'GET /v1/today (workout or rest, next three, latest revision, coach sentence) and GET /v1/plans/current/weeks/{n}.', 'Read models shaped for screens.', 'Why is the coach sentence generated from reason codes rather than free text?'],
+    ['p4-03', 4, 'Lazy mark-as-missed', 1, 'Past-dated scheduled workouts become missed when Today or the week is served. Test with a frozen clock.', 'Lazy evaluation, clock injection.', 'Why inject the clock instead of calling now() directly?'],
+    ['p4-04', 4, 'Status state machine and skip', 1, 'Allowed transitions between scheduled, completed, partial, missed, skipped, moved, enforced in one place and tested.', 'State machines.', 'Which transitions are illegal and why?'],
+    ['p4-05', 4, 'Rescheduling with rules', 2, 'GET move options (allowed days from the recovery rule) and PUT the chosen day, re-checked on apply, swap with an easy run when needed.', 'Rules offered to the client, enforced on the server.', 'Why does the client ask for allowed days instead of computing them?'],
+    ['p4-06', 4, 'Optimistic locking', 2, 'Version column on workouts and plans; stale updates return 409 with a conflict body; test with two concurrent updates.', 'Concurrency control.', 'When would you choose pessimistic locking instead?'],
+    ['p4-07', 4, 'Importance rank and phase review', 1, 'Importance per workout from the generator; decision log updated.', 'Reflection.', 'Describe the lifecycle of one scheduled workout from generation to completion.'],
+
+    ['p5-01', 5, 'Log a result by overwrite', 1, 'PUT /v1/workouts/{id}/result sets the result row; planned targets untouched; status to completed or partial by threshold.', 'PUT semantics, natural idempotency.', 'Why is a retried PUT harmless?'],
+    ['p5-02', 5, 'Free runs', 1, 'PUT /v1/runs/{uuid} with an app-generated ID; counts in volume; attached to the plan week.', 'Client-generated IDs.', 'Why may the app choose this ID but not workout IDs?'],
+    ['p5-03', 5, 'Feedback with defaults', 1, 'Result and feedback in one request; defaulted flags stored; Done with nothing touched is valid.', 'Designing for the common path.', 'Why flag untouched defaults instead of just saving them?'],
+    ['p5-04', 5, 'Events only on real change', 1, 'Publish "workout logged" through the outbox only when stored values changed; test that a repeated PUT publishes nothing.', 'Change detection.', 'What would a duplicate event cause downstream?'],
+    ['p5-05', 5, 'Edit, delete and the checkpoint prep', 1, 'Edit and delete with locking; deleting returns the workout to its date-appropriate status. Decision log updated.', 'Reversibility.', 'What happens to progress numbers when a run is deleted, and why is that fine?'],
+
+    ['cp-01', 0, 'README and architecture diagram', 1, 'README that lets a stranger run everything with one command; architecture diagram; decision log linked.', 'Documentation as part of the product.', 'What would a reviewer need to run this in ten minutes?'],
+    ['cp-02', 0, 'OpenAPI and API docs', 1, 'Generated OpenAPI for every service, served through the gateway; this becomes the app contract.', 'Contract-first.', 'Why does the app wait for this document?'],
+    ['cp-03', 0, 'First deployment', 2, 'Oracle free ARM or AWS EC2 with Compose and a Cloudflare tunnel; the full stack reachable over HTTPS; backups scripted.', 'Deployment.', 'What is the first thing you check after a deploy, and why?'],
+    ['cp-04', 0, 'Interview story', 1, 'Write the five-minute walkthrough: the problem, the architecture, three decisions with alternatives, one bug you debugged, what you would do differently.', 'Telling the story.', 'Give the walkthrough out loud, timed.'],
+
+    ['p6-01', 6, 'Signal history', 1, 'Queries over feedback, results and statuses for the last N days per user, as the input to every rule.', 'Read models for rules.', 'Why precompute nothing here?'],
+    ['p6-02', 6, 'Stage-one rules engine', 3, 'All eight reason codes as small rule classes with thresholds from the rules table; unit tests that insert history and assert which rule fires.', 'Rules engines without magic.', 'Explain one rule as a query and a threshold.'],
+    ['p6-03', 6, 'Priority, suppression and limits', 1, 'Pain first, then easing, then ready-for-more; suppressed rules logged; one feedback-driven revision per day.', 'Conflict resolution.', 'Why log suppressed rules?'],
+    ['p6-04', 6, 'Scoped proposals', 2, 'Adaptation request to coach carries reason, direction and the exact workouts in scope; the validator rejects anything outside the scope.', 'Scope as a safety boundary.', 'What stops the LLM from making a session harder when the rule said easier?'],
+    ['p6-05', 6, 'Auto-ease and revision rows', 2, 'Easing applies automatically with a PlanRevision row: version before and after, reason, workouts changed.', 'Audit trails.', 'What does the revision row let you answer six months later?'],
+    ['p6-06', 6, 'Confirmations', 2, 'Pending proposals for increases and restructures; before-and-after endpoint; confirm or discard.', 'Pending state.', 'How do you expire a pending proposal nobody answers?'],
+    ['p6-07', 6, 'Undo', 1, 'Undo creates a compensating revision restoring the previous rows; nothing deleted.', 'Compensation over deletion.', 'Why not just delete the revision?'],
+    ['p6-08', 6, 'Compare-and-apply across services', 2, 'Proposals carry the plan version they read; apply re-checks; a run logged mid-generation produces a conflict and a regeneration.', 'Distributed optimistic concurrency.', 'Describe the race and how the version check resolves it.'],
+    ['p6-09', 6, 'Runner self-adjustments', 1, 'Deterministic endpoints for reduce intensity, reduce distance, convert to easy, and the not-feeling-well path.', 'Deterministic alternatives to the LLM.', 'Why is none of this an LLM call?'],
+
+    ['p7-01', 7, 'Progress summary', 2, 'Computed on read: volume, adherence, consistency, easy-pace trend, each labelled measured or estimated.', 'Aggregation queries.', 'When would you switch to precomputing?'],
+    ['p7-02', 7, 'Personal records', 1, 'Fastest time within 2 percent of standard distances, labelled with source; best efforts separately.', 'Honest metrics.', 'Why the tolerance rule?'],
+    ['p7-03', 7, 'Plan state machine', 2, 'Pause with duration, resume placeholder (re-run feasibility), restart as new plan, end; guards tested.', 'State machines with guards.', 'Which transition is still an open decision and what is the placeholder?'],
+    ['p7-04', 7, 'Goal and schedule changes', 2, 'Profile or goal edit during an active plan triggers regeneration ahead via the engine with confirmation; completed weeks untouched.', 'Partial regeneration.', 'Why are completed weeks immutable?'],
+    ['p7-05', 7, 'Email verification', 2, 'Verification token, event to notification, provider integration, resend, expiry. Generation blocked until verified.', 'Transactional email, tokens.', 'What happens when the email provider is down?'],
+    ['p7-06', 7, 'Password reset', 1, 'Single-use expiring link; sessions revoked on reset.', 'Secure reset flows.', 'Why revoke refresh tokens on password reset?'],
+    ['p7-07', 7, 'Deletion saga', 2, 'Deactivate, 14-day window, purge events to training and coach, confirmations, hard delete.', 'Sagas with human timing.', 'What if coach never confirms the purge?'],
+    ['p7-08', 7, 'Race result', 1, 'Record the outcome, prefilled from a synced run when present, confirmed by the runner; plan to completed.', 'Closing the loop.', 'Why confirm rather than auto-record?'],
+
+    ['p8-01', 8, 'Backups and a restore test', 1, 'Nightly dumps to object storage; one restore performed and timed.', 'Backups you have tested.', 'What is an untested backup?'],
+    ['p8-02', 8, 'Alerts', 1, 'Uptime monitor on the gateway health, error tracking with stack traces, alert on generation failure rate.', 'Alerting.', 'Which three alerts would wake you at night, and which should not?'],
+    ['p8-03', 8, 'Tracing in production', 2, 'OpenTelemetry across gateway, services and the broker; Grafana for logs, metrics and traces on the server or a laptop.', 'Distributed tracing.', 'Follow one slow generation across services using a trace.'],
+    ['p8-04', 8, 'Cost controls review', 1, 'Budget alerts proven, rate limits reviewed, per-user limits visible in the app contract.', 'Operating with a budget.', 'What does the user see when the global budget is hit?'],
+    ['p8-05', 8, 'API versioning and old builds', 1, 'Additive-only rule documented; app build header logged; a deliberate breaking change staged as /v2 alongside /v1.', 'Compatibility.', 'How long does /v1 live?'],
+    ['p8-06', 8, 'Retention jobs', 1, 'Operational logs expire at 30 days; anonymised aggregates; purge verification.', 'Data retention.', 'What counts as personal data in this system?'],
+    ['p8-07', 8, 'Store and legal checklist', 1, 'Privacy policy, terms, health-data wording, deletion path documented, age rating, permission declarations.', 'Release requirements.', 'Which requirement would block submission if missed?'],
+    ['p8-08', 8, 'Phase review and the portfolio', 1, 'Decision log final for version 1; portfolio page with diagram, docs, tests, deployment and trade-offs.', 'Presenting the work.', 'What are the three limitations you would volunteer?'],
+
+    ['p9-01', 9, 'Freeze the API contract', 1, 'OpenAPI reviewed end to end with the app in mind; error shapes and auth headers fixed.', 'Contract-first delivery.', 'What would you change in the contract now that you see it from the app side?'],
+    ['p9-02', 9, 'App scaffold and auth (Claude builds, Yogesh reviews)', 2, 'React Native project, sign in, token refresh, secure storage.', 'Reading client code that calls your API.', 'What does the app do when the refresh token is rejected?'],
+    ['p9-03', 9, 'Onboarding, Today, logging screens', 3, 'The core flow from the design canvas wired to the real backend.', 'Integration testing with a real client.', 'Which backend assumption broke first?'],
+    ['p9-04', 9, 'Plan, workout, feedback, progress, manage', 3, 'Remaining screens; coach sentences and revisions rendered from the server.', 'End-to-end flows.', 'Trace a revision from feedback to the Today screen.'],
+    ['p9-05', 9, 'Health import behind a flag', 2, 'Health Connect and HealthKit read, matching, confirm screen, duplicates; flag off by default.', 'Platform integrations.', 'Why does the sync propose rather than apply?'],
+    ['p9-06', 9, 'Internal testing and submission', 2, 'TestFlight and internal track, the store checklists, submission, the first stranger.', 'Shipping.', 'What is the first thing you will watch in the dashboard after launch?']
+  ].map(function (r) { return { id: r[0], phase: r[1], title: r[2], sessions: r[3], goal: r[4], learn: r[5], explain: r[6] }; });
+
+  var STATUSES = ['todo', 'doing', 'done'];
+  var state = {}; var db = null; var dbMode = 'connecting'; var current = null; var openId = null;
+  var rows = {}; var writeChains = {}; var saveTimers = {};
+  var TICK = '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg><svg class="half" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 1 0 18"></path><circle cx="12" cy="12" r="9" style="opacity:.35"></circle></svg>';
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function rec(id) { return state[id] || { status: 'todo', note: '', answer: '' }; }
+  function stepsOf(phase) { return STEPS.filter(function (s) { return s.phase === phase; }); }
+  function phaseOf(n) { return PHASES.filter(function (p) { return p.n === n; })[0]; }
+  function firstOpen() {
+    var doing = STEPS.filter(function (s) { return rec(s.id).status === 'doing'; })[0];
+    return doing || STEPS.filter(function (s) { return rec(s.id).status !== 'done'; })[0] || null;
+  }
+  function ringArc(circle, frac, circ) { circle.setAttribute('stroke-dashoffset', String(circ - circ * frac)); }
+
+  function renderOverall() {
+    var total = STEPS.length, done = 0, doing = 0, sess = 0, sessDone = 0;
+    STEPS.forEach(function (s) { var st = rec(s.id).status; sess += s.sessions; if (st === 'done') { done++; sessDone += s.sessions; } if (st === 'doing') doing++; });
+    var pct = total ? Math.round(done / total * 100) : 0;
+    document.getElementById('pct').textContent = pct + '%';
+    document.getElementById('c-done').textContent = done; document.getElementById('c-total').textContent = total;
+    document.getElementById('s-done').textContent = sessDone; document.getElementById('s-total').textContent = sess;
+    document.getElementById('c-doing').textContent = doing ? doing + ' in progress' : '';
+    ringArc(document.getElementById('ringfg'), done / total, 251.3);
+    var cpIndex = STEPS.findIndex(function (s) { return s.id === 'cp-04'; }) + 1;
+    var cpc = document.getElementById('ringcp'); cpc.setAttribute('stroke-dashoffset', String(-(251.3 * cpIndex / total)));
+    var nx = firstOpen();
+    var t = document.getElementById('next-t'), d = document.getElementById('next-d'), row = document.getElementById('next-row');
+    row.innerHTML = '';
+    if (!nx) { t.textContent = 'Everything is done'; d.textContent = 'Version 1 is built. Time to write the version 2 list.'; return; }
+    var ph = phaseOf(nx.phase); var r = rec(nx.id);
+    t.textContent = nx.title;
+    d.textContent = (ph ? ph.title : '') + ' · ' + nx.sessions + (nx.sessions === 1 ? ' session' : ' sessions') + (r.status === 'doing' ? ' · in progress' : '');
+    var go = document.createElement('button'); go.className = 'btn ghost'; go.type = 'button'; go.textContent = 'Open';
+    go.addEventListener('click', function () { selectPhase(nx.phase, nx.id); });
+    row.appendChild(go);
+    if (r.status !== 'doing') {
+      var st = document.createElement('button'); st.className = 'btn primary'; st.type = 'button'; st.textContent = 'Start this step';
+      st.addEventListener('click', function () { setStatus(nx.id, 'doing'); selectPhase(nx.phase, nx.id); });
+      row.appendChild(st);
+    } else {
+      var dn = document.createElement('button'); dn.className = 'btn primary'; dn.type = 'button'; dn.textContent = 'Mark done';
+      dn.addEventListener('click', function () { setStatus(nx.id, 'done'); });
+      row.appendChild(dn);
+    }
+  }
+
+  function renderRail() {
+    var host = document.getElementById('rail'); host.innerHTML = '';
+    PHASES.forEach(function (p) {
+      var list = stepsOf(p.n), done = list.filter(function (s) { return rec(s.id).status === 'done'; }).length;
+      var frac = list.length ? done / list.length : 0;
+      var b = document.createElement('button'); b.type = 'button';
+      b.className = 'ph' + (p.n === current ? ' active' : '') + (p.cp ? ' cp' : '') + (frac === 1 ? ' full' : '');
+      b.setAttribute('aria-current', p.n === current ? 'true' : 'false');
+      b.innerHTML = '<span class="r"><svg viewBox="0 0 34 34"><circle class="b" cx="17" cy="17" r="14"></circle><circle class="f" cx="17" cy="17" r="14" stroke-dasharray="88" stroke-dashoffset="' + (88 - 88 * frac) + '"></circle></svg><span class="n">' + (p.cp ? 'CP' : p.n) + '</span></span><span><span class="t"></span><br><span class="m">' + done + ' / ' + list.length + ' · months ' + p.months + '</span></span>';
+      b.querySelector('.t').textContent = p.title;
+      b.addEventListener('click', function () { selectPhase(p.n); });
+      host.appendChild(b);
+    });
+  }
+
+  function selectPhase(n, open) {
+    current = n; lsSet('rc-pathway-phase', String(n));
+    if (open) openId = open;
+    renderRail(); renderSteps();
+    if (open && rows[open]) rows[open].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function renderSteps() {
+    var ph = phaseOf(current);
+    document.getElementById('ph-k').textContent = ph ? (ph.cp ? 'Checkpoint · month ' + ph.months : 'Phase ' + ph.n + ' · months ' + ph.months) : '';
+    document.getElementById('ph-title').textContent = ph ? ph.title : '';
+    document.getElementById('ph-desc').textContent = ph ? ph.desc : '';
+    var slot = document.getElementById('cp-slot'); slot.innerHTML = '';
+    if (ph && ph.cp) { var c = document.createElement('div'); c.className = 'cpcard'; c.innerHTML = '<b>The number to hold to.</b> If this milestone arrives late, scope is cut, not the deadline. Levers: defer email further, ship with three adaptation rules, skip the optional Spring Cloud add-ons.'; slot.appendChild(c); }
+    var host = document.getElementById('steps'); host.innerHTML = ''; rows = {};
+    var hideDone = document.getElementById('hide-done').checked;
+    var list = stepsOf(current);
+    var done = list.filter(function (s) { return rec(s.id).status === 'done'; }).length;
+    document.getElementById('ph-count').textContent = done + ' of ' + list.length + ' done';
+    var shown = 0;
+    list.forEach(function (s, i) {
+      var r = rec(s.id);
+      if (hideDone && r.status === 'done') return;
+      shown++;
+      var el = document.createElement('div');
+      el.className = 'row ' + r.status + (openId === s.id ? ' open' : '');
+      el.innerHTML =
+        '<button type="button" class="chk" aria-label="Cycle status">' + TICK + '</button>' +
+        '<div class="main" role="button" tabindex="0" aria-expanded="' + (openId === s.id) + '"><div class="title"></div><div class="meta"><span class="idx">' + String(i + 1).padStart(2, '0') + '</span><span>' + s.sessions + (s.sessions === 1 ? ' session' : ' sessions') + '</span><span class="c"></span></div></div>' +
+        '<div class="act"></div>' +
+        '<div class="det">' +
+          '<p class="goal"></p>' +
+          '<div class="blocks"><div class="block"><div class="h">You learn</div><p class="lr"></p></div><div class="block q"><div class="h">Explain it back</div><p class="ex"></p></div></div>' +
+          '<div class="notes"><div><label for="note-' + s.id + '">Notes: what you learned, what blocked you</label><textarea id="note-' + s.id + '"></textarea></div><div><label for="ans-' + s.id + '">Your answer to the question</label><textarea id="ans-' + s.id + '"></textarea></div></div>' +
+          '<div class="foot-row"><span class="saved" id="saved-' + s.id + '"></span><span class="act2"></span></div>' +
+        '</div>';
+      el.querySelector('.title').textContent = s.title;
+      el.querySelector('.c').textContent = s.learn;
+      el.querySelector('.goal').textContent = s.goal;
+      el.querySelector('.lr').textContent = s.learn;
+      el.querySelector('.ex').textContent = s.explain;
+      el.querySelector('.chk').addEventListener('click', function () { var cur = rec(s.id).status; setStatus(s.id, STATUSES[(STATUSES.indexOf(cur) + 1) % 3]); });
+      var main = el.querySelector('.main');
+      function toggle() { openId = openId === s.id ? null : s.id; renderSteps(); }
+      main.addEventListener('click', toggle);
+      main.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+      renderActions(el, s);
+      var note = el.querySelector('#note-' + s.id), ans = el.querySelector('#ans-' + s.id);
+      note.value = r.note || ''; ans.value = r.answer || '';
+      note.addEventListener('input', function () { queueText(s.id, 'note', note.value); });
+      ans.addEventListener('input', function () { queueText(s.id, 'answer', ans.value); });
+      host.appendChild(el); rows[s.id] = el;
+    });
+    if (!shown) { var e = document.createElement('div'); e.className = 'empty'; e.textContent = hideDone && list.length ? 'All steps in this phase are done.' : 'No steps here yet.'; host.appendChild(e); }
+  }
+
+  function renderActions(el, s) {
+    var r = rec(s.id);
+    var act = el.querySelector('.act'), act2 = el.querySelector('.act2');
+    act.innerHTML = ''; act2.innerHTML = '';
+    function mk(label, cls, st) { var b = document.createElement('button'); b.type = 'button'; b.className = 'mini ' + cls; b.textContent = label; b.addEventListener('click', function (e) { e.stopPropagation(); setStatus(s.id, st); }); return b; }
+    if (r.status === 'todo') { act.appendChild(mk('Start', 'go', 'doing')); }
+    else if (r.status === 'doing') { act.appendChild(mk('Mark done', 'go', 'done')); act2.appendChild(mk('Back to to do', '', 'todo')); }
+    else { act.appendChild(mk('Done', 'on', 'done')); act2.appendChild(mk('Reopen', '', 'doing')); }
+  }
+
+  function applyRecordToRow(id) {
+    var el = rows[id]; if (!el) return;
+    var r = rec(id); var s = STEPS.filter(function (x) { return x.id === id; })[0];
+    el.className = 'row ' + r.status + (openId === id ? ' open' : '');
+    renderActions(el, s);
+    var note = el.querySelector('#note-' + id), ans = el.querySelector('#ans-' + id);
+    if (note && document.activeElement !== note && note.value !== (r.note || '')) note.value = r.note || '';
+    if (ans && document.activeElement !== ans && ans.value !== (r.answer || '')) ans.value = r.answer || '';
+  }
+
+  function setStatus(id, status) {
+    var r = Object.assign({}, rec(id));
+    if (r.status === status) return;
+    r.status = status;
+    if (status === 'done') r.doneAt = new Date().toISOString(); else delete r.doneAt;
+    r.updatedAt = new Date().toISOString();
+    state[id] = r; persist(id);
+    renderOverall(); renderRail(); applyRecordToRow(id);
+    if (document.getElementById('hide-done').checked && status === 'done') renderSteps();
+  }
+
+  function queueText(id, field, value) {
+    var r = Object.assign({}, rec(id)); r[field] = value; r.updatedAt = new Date().toISOString(); state[id] = r;
+    var saved = document.getElementById('saved-' + id); if (saved) saved.textContent = 'Typing';
+    clearTimeout(saveTimers[id]); saveTimers[id] = setTimeout(function () { persist(id); }, 900);
+  }
+
+  function persist(id) {
+    var r = state[id]; var saved = document.getElementById('saved-' + id);
+    if (dbMode === 'local' || !db) { lsSet('rc-pathway-state', JSON.stringify(state)); if (saved) saved.textContent = 'Saved on this device only'; return; }
+    var body = { status: r.status, note: r.note || '', answer: r.answer || '', updatedAt: r.updatedAt || new Date().toISOString() };
+    if (r.doneAt) body.doneAt = r.doneAt;
+    writeChains[id] = (writeChains[id] || Promise.resolve()).then(function () { return db.collection('progress').doc(id).set(body); })
+      .then(function () { if (saved) saved.textContent = 'Saved'; })
+      .catch(function (e) { if (saved) saved.textContent = 'Could not save (' + (e && e.code ? e.code : 'error') + '). Your change stays on screen; try again in a moment.'; });
+  }
+
+  function setStorageLine(mode) {
+    var el = document.getElementById('storage');
+    if (mode === 'db') el.innerHTML = '<span class="dot"></span><span>Progress saved to the page\'s store. It follows you across devices, and Claude can read it.</span>';
+    else el.innerHTML = '<span class="dot off"></span><span>Store unavailable in this view. Progress is kept on this device only.</span>';
+  }
+
+  function init() {
+    var savedPhase = parseInt(lsGet('rc-pathway-phase') || '1', 10); current = isNaN(savedPhase) ? 1 : savedPhase;
+    try { var ls = lsGet('rc-pathway-state'); if (ls) state = JSON.parse(ls) || {}; } catch (e) { state = {}; }
+    document.getElementById('hide-done').addEventListener('change', renderSteps);
+    renderOverall(); renderRail(); renderSteps();
+    var use = window.claude && window.claude.use ? window.claude.use('db') : Promise.resolve(null);
+    use.then(function (ns) {
+      if (!ns) { dbMode = 'local'; setStorageLine('local'); return; }
+      db = ns; dbMode = 'db'; setStorageLine('db');
+      db.collection('progress').onSnapshot(function (snap) {
+        var next = {}; snap.docs.forEach(function (d) { if (d.exists) next[d.id] = d.data(); }); state = next;
+        renderOverall(); renderRail(); Object.keys(rows).forEach(applyRecordToRow);
+        var nx = firstOpen(); if (nx && !lsGet('rc-pathway-phase')) selectPhase(nx.phase);
+      }, function () { dbMode = 'local'; setStorageLine('local'); });
+    });
+  }
+  function start() {
+    if (!document.getElementById('steps') || !document.getElementById('rail')) {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+      return;
+    }
+    try { init(); } catch (e) {
+      var el = document.getElementById('storage');
+      if (el) el.innerHTML = '<span class="dot off"></span><span>The page script failed: ' + String(e && e.message ? e.message : e).replace(/</g, '&lt;') + '. Reload the page; if it persists, tell Claude.</span>';
+    }
+  }
+  var hot = window.claude && window.claude.hot;
+  if (hot && typeof hot.ready === 'function') hot.ready(start);
+  else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
+})();
+</script>

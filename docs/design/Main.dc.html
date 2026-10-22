@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding: running experience</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;color:#16201C;background:#F6F5F1}
+a{color:#1F6F5A}a:hover{color:#174F41}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 100vh; box-sizing: border-box; background: #F6F5F1; display: flex; flex-direction: column">
+  <header style="padding: 60px 24px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1F6F5A">runcoach</span>
+      <span style="font-size: 13px; font-weight: 600; color: #5B655F">Step 1 of 8</span>
+    </div>
+    <div style="height: 6px; border-radius: 3px; background: #E3E1DA; overflow: hidden"><div style="width: 12.5%; height: 100%; background: #1F6F5A"></div></div>
+  </header>
+  <main style="flex: 1; padding: 24px 24px 0; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E3E1DA">
+      <div role="img" aria-label="Shape of a 14-week plan: gradual build with lighter weeks and a taper" style="display: flex; align-items: flex-end; gap: 2px; width: 84px; height: 34px; flex-shrink: 0"><span style="flex: 1; height: 18px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 20px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 22px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 16px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 24px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 26px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 28px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 20px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 30px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 32px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 34px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 24px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 18px; border-radius: 2px; background: #9CC7B8"></span><span style="flex: 1; height: 12px; border-radius: 2px; background: #9CC7B8"></span></div>
+      <p style="margin: 0; font-size: 13px; line-height: 1.4"><strong>8 quick questions</strong>, then a plan built around your week. You can change any answer later.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h1 style="margin: 0; font-size: 26px; line-height: 1.2; font-weight: 800">How would you describe your running right now?</h1>
+      <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B655F">This sets your starting point so the first weeks feel doable, not daunting.</p>
+    </div>
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+      <legend style="position: absolute; opacity: 0; width: 1px; height: 1px">Running experience</legend>
+      <label style="display: flex; align-items: center; gap: 14px; padding: 0 16px; height: 56px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #E3E1DA; cursor: pointer">
+        <input type="radio" name="experience" style="width: 20px; height: 20px; margin: 0; accent-color: #1F6F5A">
+        <span style="font-size: 15px; font-weight: 600">I'm new to running</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 14px; padding: 0 16px; height: 56px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #E3E1DA; cursor: pointer">
+        <input type="radio" name="experience" style="width: 20px; height: 20px; margin: 0; accent-color: #1F6F5A">
+        <span style="font-size: 15px; font-weight: 600">I run now and then</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 14px; padding: 0 16px; height: 56px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #1F6F5A; box-shadow: 0 0 0 1px #1F6F5A; cursor: pointer">
+        <input type="radio" name="experience" checked="" style="width: 20px; height: 20px; margin: 0; accent-color: #1F6F5A">
+        <span style="font-size: 15px; font-weight: 700">I run regularly, 2 to 3 times a week</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 14px; padding: 0 16px; height: 56px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #E3E1DA; cursor: pointer">
+        <input type="radio" name="experience" style="width: 20px; height: 20px; margin: 0; accent-color: #1F6F5A">
+        <span style="font-size: 15px; font-weight: 600">I follow a structured training plan</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 14px; padding: 0 16px; height: 56px; border-radius: 14px; background: #FFFFFF; border: 1.5px solid #E3E1DA; cursor: pointer">
+        <input type="radio" name="experience" style="width: 20px; height: 20px; margin: 0; accent-color: #1F6F5A">
+        <span style="font-size: 15px; font-weight: 600">I'm coming back after a break</span>
+      </label>
+    </fieldset>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700">How far can you comfortably run today?</span>
+      <div style="display: flex; gap: 8px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer">
+          <input type="radio" name="distance" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Under 2 km</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer">
+          <input type="radio" name="distance" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">2 to 5 km</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer">
+          <input type="radio" name="distance" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">5 to 10 km</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer">
+          <input type="radio" name="distance" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">10 km +</label>
+      </div>
+    </div>
+  </main>
+  <footer style="padding: 16px 24px 36px; display: flex; flex-direction: column; gap: 12px">
+    <a href="OnboardingGoal.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; background: #1F6F5A; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none">Continue</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":940}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

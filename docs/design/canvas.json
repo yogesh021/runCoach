@@ -1,0 +1,286 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 940,
+      "title": "1 \u00b7 Experience",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "OnboardingGoal.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 1080,
+      "title": "2 \u00b7 Goal",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "OnboardingSchedule.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 900,
+      "title": "3 \u00b7 Schedule",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "PlanSummary.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 900,
+      "title": "4 \u00b7 Plan ready",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "Today.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 980,
+      "title": "5 \u00b7 Today (home tab)",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "Calendar.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 920,
+      "title": "6 \u00b7 This week",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "WorkoutDetail.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 1000,
+      "title": "7 \u00b7 Workout detail",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "Feedback.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 920,
+      "title": "8 \u00b7 Post-run feedback",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "PlanOverview.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 1240,
+      "title": "9 \u00b7 Plan overview (Plan tab)",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "ManagePlan.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 1180,
+      "title": "10 \u00b7 Manage plan",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "Dashboard.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 1000,
+      "title": "11 \u00b7 Progress",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "Profile.dc.html": {
+      "x": 5170,
+      "y": 0,
+      "w": 390,
+      "h": 960,
+      "title": "12 \u00b7 Profile",
+      "is_interactive": true,
+      "radius": 40
+    },
+    "TodayRest.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 980,
+      "title": "5b \u00b7 Today \u00b7 rest day",
+      "radius": 40
+    },
+    "GoalStateEmpty.dc.html": {
+      "h": 1080,
+      "radius": 40,
+      "title": "State 1 \u00b7 No goal selected",
+      "w": 390,
+      "x": 0,
+      "y": 0,
+      "page": "states"
+    },
+    "GoalStateCompletion.dc.html": {
+      "h": 1080,
+      "radius": 40,
+      "title": "State 2 \u00b7 Half marathon, no race yet",
+      "w": 390,
+      "x": 470,
+      "y": 0,
+      "page": "states"
+    },
+    "GoalStateFaster.dc.html": {
+      "h": 1080,
+      "radius": 40,
+      "title": "State 3 \u00b7 Get faster follow-up",
+      "w": 390,
+      "x": 940,
+      "y": 0,
+      "page": "states"
+    },
+    "GoalStateRaceValid.dc.html": {
+      "h": 1080,
+      "radius": 40,
+      "title": "State 4 \u00b7 Race date fits",
+      "w": 390,
+      "x": 1410,
+      "y": 0,
+      "page": "states"
+    },
+    "GoalStateRaceWarning.dc.html": {
+      "h": 1080,
+      "radius": 40,
+      "title": "State 5 \u00b7 Race date too soon",
+      "w": 390,
+      "x": 1880,
+      "y": 0,
+      "page": "states"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-18T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas",
+    "page": "flow"
+  },
+  "pages": [
+    {
+      "id": "flow",
+      "name": "Main flow"
+    },
+    {
+      "id": "states",
+      "name": "Goal screen states"
+    }
+  ],
+  "notes": {
+    "t0": {
+      "kind": "title1",
+      "maxW": 5560,
+      "text": "runcoach \u00b7 main flow, left to right. Press Play on any screen and tap through.",
+      "w": 240,
+      "x": 0,
+      "y": -560
+    },
+    "t1": {
+      "kind": "title1",
+      "maxW": 1800,
+      "text": "Onboarding \u00b7 1 to 4",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 1800,
+      "text": "Every day \u00b7 5 to 8",
+      "w": 240,
+      "x": 1880,
+      "y": -300
+    },
+    "t3": {
+      "kind": "title1",
+      "maxW": 860,
+      "text": "Plan \u00b7 9 to 10",
+      "w": 240,
+      "x": 3760,
+      "y": -300
+    },
+    "t5": {
+      "kind": "title1",
+      "maxW": 860,
+      "text": "Progress and profile \u00b7 11 to 12",
+      "w": 240,
+      "x": 4700,
+      "y": -300
+    },
+    "n1": {
+      "fill": "green",
+      "w": 380,
+      "x": 0,
+      "y": 2500,
+      "text": "Backend behind screens 1 to 4\n\nPOST /api/onboarding saves all answers in one request and returns the feasibility verdict for the goal (see the states page for the mock rules).\n\nPOST /api/plans generates the plan from profile + goal with versioned rules. Deterministic: same input, same plan.\n\nEntities: RunnerProfile, RunningGoal, TrainingPlan, TrainingWeek, ScheduledWorkout, WorkoutStep.\n\nMilestone 1 is screens 1 to 4 without accounts; accounts come in milestone 2."
+    },
+    "n2": {
+      "fill": "blue",
+      "w": 380,
+      "x": 1880,
+      "y": 2500,
+      "text": "Backend behind screens 5 to 8\n\nGET /api/today returns one object: date, today's workout or rest, next three sessions, the latest plan revision, and the coach sentence.\n\nThe coach sentence is server-generated from reason codes and templates (CALF_SORENESS_EASED, REST_BEFORE_HARD_DAY), never free text, so it is testable.\n\nGET /api/workouts/{id}/move-options returns the days the recovery rule allows (screen 7), so the client never computes rules.\n\nPOST /api/workouts/{id}/results with an idempotency key: the phone may retry. Feedback defaults are derived from the result and sent back as the user's answers only if they tap Done.\n\nEntities: WorkoutResult, RecoveryFeedback, PlanRevision."
+    },
+    "n3": {
+      "fill": "orange",
+      "w": 380,
+      "x": 3760,
+      "y": 2500,
+      "text": "Backend behind screens 9 and 10\n\nGET /api/plans/current returns the 14-week volume shape, per-week done/missed/eased counts and the latest revision.\n\nGET /api/plans/current/revisions is the change log. Undo = POST /api/plans/current/revisions/{id}/undo, which creates a new compensating revision rather than deleting history.\n\nPause, restart, end are state transitions on TrainingPlan (ACTIVE, PAUSED, ENDED) with a reason and an optional duration. Changing goal or schedule regenerates the weeks ahead only; completed weeks are immutable.\n\nConcurrency question for later: two devices editing the plan at once."
+    },
+    "t4": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "Screen 2 in five states \u00b7 same artboard, different presets. Not part of the flow.",
+      "w": 240,
+      "x": 0,
+      "y": -300,
+      "page": "states"
+    },
+    "n4": {
+      "fill": "orange",
+      "w": 380,
+      "x": 4700,
+      "y": 2500,
+      "text": "Backend behind screens 11 and 12\n\nGET /api/progress/summary aggregates volume, adherence (done, missed, eased), easy-pace trend and personal records. Each metric carries measured or estimated.\n\nGET and PUT /api/profile hold the onboarding answers. A PUT that changes goal or schedule re-runs feasibility and regenerates the plan ahead, and records a PlanRevision with reason PROFILE_CHANGED.\n\nAccount settings (units, reminders, sign out) belong to milestone 2 with Spring Security."
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "OnboardingGoal.dc.html",
+    "OnboardingSchedule.dc.html",
+    "PlanSummary.dc.html",
+    "Today.dc.html",
+    "Calendar.dc.html",
+    "WorkoutDetail.dc.html",
+    "Feedback.dc.html",
+    "PlanOverview.dc.html",
+    "ManagePlan.dc.html",
+    "Dashboard.dc.html",
+    "Profile.dc.html",
+    "TodayRest.dc.html",
+    "GoalStateEmpty.dc.html",
+    "GoalStateCompletion.dc.html",
+    "GoalStateFaster.dc.html",
+    "GoalStateRaceValid.dc.html",
+    "GoalStateRaceWarning.dc.html"
+  ],
+  "title": "runcoach app design"
+}

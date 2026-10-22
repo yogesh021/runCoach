@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Post-workout feedback</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;color:#16201C;background:#F6F5F1}
+a{color:#1F6F5A}a:hover{color:#174F41}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 100vh; box-sizing: border-box; background: #F6F5F1; display: flex; flex-direction: column">
+  <header style="padding: 64px 24px 0; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 13px; font-weight: 700; color: #5B655F">Thu 19 Nov · Intervals 6 × 400 m</span>
+    <h1 style="margin: 0; font-size: 28px; line-height: 1.15; font-weight: 800">How did it go?</h1>
+    <p style="margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: #5B655F">Prefilled from your run. Change anything that's wrong, then tap Done.</p>
+  </header>
+  <main style="flex: 1; padding: 16px 24px 0; display: flex; flex-direction: column; gap: 16px">
+    <section style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E3E1DA">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #5B655F">Recorded</span>
+        <span style="padding: 3px 8px; border-radius: 999px; background: #E6F2EE; color: #174F41; font-size: 11px; font-weight: 700">Measured on phone</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800">5.6</span><span style="font-size: 11px; font-weight: 600; color: #5B655F">km</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800">36:42</span><span style="font-size: 11px; font-weight: 600; color: #5B655F">time</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800">6:33</span><span style="font-size: 11px; font-weight: 600; color: #5B655F">/km avg</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800">158</span><span style="font-size: 11px; font-weight: 600; color: #5B655F">avg HR</span></div>
+      </div>
+    </section>
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+      <legend style="padding: 0; margin-bottom: 10px; font-size: 15px; font-weight: 700">Did you complete it as planned?</legend>
+      <div style="display: flex; gap: 8px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer"><input type="radio" name="completed" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Yes</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 14px; font-weight: 600; cursor: pointer"><input type="radio" name="completed" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Mostly</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 14px; font-weight: 600; cursor: pointer"><input type="radio" name="completed" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">No</label>
+      </div>
+    </fieldset>
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+      <legend style="padding: 0; margin-bottom: 8px; font-size: 15px; font-weight: 700">How hard did it feel?</legend>
+      <div style="display: flex; gap: 4px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">1</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">2</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">3</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">4</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">5</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">6</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #C24E0F; border: 1.5px solid #C24E0F; color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer"><input type="radio" name="rpe" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">7</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">8</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">9</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="radio" name="rpe" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">10</label>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #5B655F">
+        <span>Very easy</span>
+        <span style="color: #C24E0F; font-weight: 700">7 · guessed from your pace</span>
+        <span>All out</span>
+      </div>
+    </fieldset>
+    <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+      <legend style="padding: 0; margin-bottom: 10px; font-size: 15px; font-weight: 700">Any pain or unusual soreness?</legend>
+      <div style="display: flex; gap: 8px">
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 14px; font-weight: 600; cursor: pointer"><input type="radio" name="pain" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">None</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #1F6F5A; border: 1.5px solid #1F6F5A; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer"><input type="radio" name="pain" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Mild</label>
+        <label style="position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 14px; font-weight: 600; cursor: pointer"><input type="radio" name="pain" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Yes</label>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E3E1DA">
+        <span style="font-size: 13px; font-weight: 700">Where?</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <label style="position: relative; display: flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border-radius: 18px; background: #16201C; border: 1.5px solid #16201C; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer"><input type="checkbox" name="site" checked="" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Calf</label>
+          <label style="position: relative; display: flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="site" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Shin</label>
+          <label style="position: relative; display: flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="site" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Knee</label>
+          <label style="position: relative; display: flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="site" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Hip</label>
+          <label style="position: relative; display: flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border-radius: 18px; background: #FFFFFF; border: 1.5px solid #E3E1DA; font-size: 13px; font-weight: 600; cursor: pointer"><input type="checkbox" name="site" style="position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0">Other</label>
+        </div>
+      </div>
+    </fieldset>
+    <p style="margin: 0; font-size: 12px; line-height: 1.45; color: #5B655F">Your next sessions adjust from this. If anything changes, you'll see the reason on Today.</p>
+  </main>
+  <footer style="padding: 12px 24px 36px; display: flex; flex-direction: column; gap: 6px">
+    <a href="Today.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; background: #1F6F5A; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none">Done</a>
+    <span style="text-align: center; font-size: 12px; font-weight: 600; color: #5B655F">Works as is. Nothing here is required.</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":920}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
